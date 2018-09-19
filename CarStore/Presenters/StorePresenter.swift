@@ -20,8 +20,6 @@ protocol StorePresenterDelegate: AnyObject
 
 class StorePresenter
 {
-    static let DEFAULT_CURRENCY = StoreCurrency(name: "USD", symbol: "$", exchangeRate: 1.0)
-    
     weak var delegate : StoreViewDelegate?
     private var dataSource : StoreViewDataSource?
     private var model: Store?
@@ -39,11 +37,11 @@ class StorePresenter
     
     private func initDefaultStore()
     {
-        let cars = [Car(manufacturer: "BMW", model: "34", topSpeed: 250, price: 20000, currency: StorePresenter.DEFAULT_CURRENCY, imageURL: nil),
-                    Car(manufacturer: "Mercedes", model: "100", topSpeed: 222, price: 60000, currency: StorePresenter.DEFAULT_CURRENCY, imageURL: nil),
-                    Car(manufacturer: "Toyota", model: "4", topSpeed: 200, price: 10000, currency: StorePresenter.DEFAULT_CURRENCY, imageURL: nil)]
+        let cars = [Car(manufacturer: "BMW", model: "34", topSpeed: 250, price: 20000, imageURL: nil),
+                    Car(manufacturer: "Mercedes", model: "100", topSpeed: 222, price: 60000, imageURL: nil),
+                    Car(manufacturer: "Toyota", model: "4", topSpeed: 200, price: 10000, imageURL: nil)]
         
-        self.model = Store(withCars: cars, defaultCurrency: StorePresenter.DEFAULT_CURRENCY)
+        self.model = Store(withCars: cars, defaultCurrency: CurrencyConstants.DEFAULT_CURRENCY)
     }
 }
 
@@ -130,7 +128,7 @@ extension StorePresenter
             {
                 do
                 {
-                    let result = try StoreCurrency.initCurrencies(withJSON: json, defaultCurrency: StorePresenter.DEFAULT_CURRENCY)
+                    let result = try StoreCurrency.initCurrencies(withJSON: json, defaultCurrency: CurrencyConstants.DEFAULT_CURRENCY)
                     handler(result, nil)
                 }
                 catch

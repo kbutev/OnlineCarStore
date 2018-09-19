@@ -28,7 +28,7 @@ struct Store
         self.currencies = currencies
     }
     
-    func getCurrency(byName name: String) -> StoreCurrency?
+    func getCurrency(byName name: LanguageName) -> StoreCurrency?
     {
         for e in 0..<currencies.count
         {

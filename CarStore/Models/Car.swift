@@ -14,16 +14,14 @@ struct Car
     let model: String
     let topSpeed: Int
     let price: Int
-    private let currency: StoreCurrency
     let imageURL: String?
     
-    init(manufacturer: String, model: String, topSpeed: Int, price: Int, currency: StoreCurrency, imageURL: String?)
+    init(manufacturer: String, model: String, topSpeed: Int, price: Int, imageURL: String?)
     {
         self.manufacturer = manufacturer
         self.model = model
         self.topSpeed = topSpeed
         self.price = price
-        self.currency = currency
         self.imageURL = imageURL
     }
     

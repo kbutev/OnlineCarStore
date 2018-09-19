@@ -157,7 +157,7 @@
 				B844564121525FEC009F172C /* Models */,
 				B844563F21525FDA009F172C /* ViewModels */,
 				B844564221525FF0009F172C /* Views */,
-				B844564321525FF5009F172C /* Utilies */,
+				B844564321525FF5009F172C /* Utilities */,
 				B8445670215262CF009F172C /* Interface */,
 				B844561721525F85009F172C /* Assets.xcassets */,
 				B844561C21525F85009F172C /* Info.plist */,
@@ -244,14 +244,14 @@
 			path = Views;
 			sourceTree = "<group>";
 		};
-		B844564321525FF5009F172C /* Utilies */ = {
+		B844564321525FF5009F172C /* Utilities */ = {
 			isa = PBXGroup;
 			children = (
 				B844566A2152610B009F172C /* NetworkErrors.swift */,
 				B844566C2152611E009F172C /* LanguageConstants.swift */,
 				B844566E21526126009F172C /* CurrencyConstants.swift */,
 			);
-			path = Utilies;
+			path = Utilities;
 			sourceTree = "<group>";
 		};
 		B8445670215262CF009F172C /* Interface */ = {

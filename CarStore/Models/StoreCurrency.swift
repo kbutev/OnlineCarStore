@@ -14,26 +14,24 @@ enum StoreCurrencyError: Error {
 
 struct StoreCurrency
 {
-    static let DESIRED_CURRENCIES = ["EUR", "CZK", "BGN"]
-    
-    let name: String
+    let name: LanguageName
     let symbol: String
     let exchangeRate: Double
     
-    init(name: String, symbol: String, exchangeRate: Double)
+    init(name: LanguageName, symbol: String, exchangeRate: Double)
     {
         self.name = name
         self.symbol = symbol
         self.exchangeRate = exchangeRate
     }
     
-    init(withJSON json: [String : Any], defaultCurrency: StoreCurrency, currencyName: String) throws
+    init(withJSON json: [String : Any], defaultCurrency: StoreCurrency, currencyName: LanguageName) throws
     {
         self.name = currencyName
         
-        self.symbol = currencyName
+        self.symbol = LanguageCurrencySymbols.getSymbolFor(language: currencyName)
         
-        let exchangeRateKey = String("\(defaultCurrency.name)\(currencyName)")
+        let exchangeRateKey = String("\(defaultCurrency.name.rawValue)\(currencyName.rawValue)")
         
         guard let exchangeRate = json[exchangeRateKey] as? Double else {
             throw StoreCurrencyError.jsonUnwrapError
@@ -58,12 +56,20 @@ struct StoreCurrency
             throw StoreCurrencyError.jsonUnwrapError
         }
         
-        for desiredCurrency in DESIRED_CURRENCIES
+        for desiredCurrency in CurrencyConstants.DESIRED_CURRENCIES
         {
+            // Skip the construction of the default currency, we will add it manually to the array
+            if desiredCurrency == defaultCurrency.name
+            {
+                continue
+            }
+            
             let currency = try StoreCurrency(withJSON: list, defaultCurrency: defaultCurrency, currencyName: desiredCurrency)
             
             currencies.append(currency)
         }
+        
+        currencies.append(defaultCurrency)
         
         return currencies
     }
