@@ -26,6 +26,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         
         // Activate window
         window!.makeKeyAndVisible()
+        
         return true
     }
 

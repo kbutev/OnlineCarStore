@@ -10,31 +10,22 @@ import Foundation
 
 enum LanguageName : String
 {
-    case usd = "USD"
-    case euro = "EUR"
-    case czechCrown = "CZK"
-    case bulgarianLev = "BGN"
+    case USD = "USD"
+    case EUR = "EUR"
+    case CZK = "CZK"
+    case BGN = "BGN"
 }
 
-enum LanguageCurrencySymbols : String
+struct CurrencySymbols
 {
-    case usd = "$"
-    case euro = "€"
-    case czechCrown = "Kč"
-    case bulgarianLev = "Лв."
-    
-    static func getSymbolFor(language: LanguageName) -> String
+    static func symbol(for language: LanguageName) -> String
     {
         switch language
         {
-        case .usd:
-            return "$"
-        case .euro:
-            return "€"
-        case .bulgarianLev:
-            return "Лв."
-        case .czechCrown:
-            return "Kč"
+        case .USD: return "$"
+        case .EUR: return "€"
+        case .BGN: return "Лв."
+        case .CZK: return "Kč"
         }
     }
 }

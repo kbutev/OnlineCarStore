@@ -7,3 +7,8 @@
 //
 
 import UIKit
+
+class CheckoutView : UIView
+{
+    
+}

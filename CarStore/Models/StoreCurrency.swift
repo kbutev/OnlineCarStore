@@ -29,9 +29,9 @@ struct StoreCurrency
     {
         self.name = currencyName
         
-        self.symbol = LanguageCurrencySymbols.getSymbolFor(language: currencyName)
+        self.symbol = CurrencySymbols.symbol(for: currencyName)
         
-        let exchangeRateKey = String("\(defaultCurrency.name.rawValue)\(currencyName.rawValue)")
+        let exchangeRateKey = String("\(defaultCurrency.name)\(currencyName)")
         
         guard let exchangeRate = json[exchangeRateKey] as? Double else {
             throw StoreCurrencyError.jsonUnwrapError

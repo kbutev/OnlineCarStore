@@ -7,3 +7,13 @@
 //
 
 import Foundation
+
+struct BasketViewModel
+{
+    let carDescriptions : [String]
+    
+    init(carDescriptions: [String])
+    {
+        self.carDescriptions = carDescriptions
+    }
+}

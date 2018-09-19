@@ -7,3 +7,41 @@
 //
 
 import UIKit
+
+class ProductViewController : UIViewController
+{
+    private var customView: ProductView?
+    
+    private var presenter: ProductPresenterDelegate? = nil
+    
+    override func viewDidLoad()
+    {
+        super.viewDidLoad()
+        
+        initInterface()
+        
+        initPresenter()
+        
+        self.presenter?.loadStore()
+    }
+    
+    override func viewWillAppear(_ animated: Bool)
+    {
+        super.viewWillAppear(animated)
+    }
+    
+    override func didReceiveMemoryWarning()
+    {
+        super.didReceiveMemoryWarning()
+    }
+    
+    private func initInterface()
+    {
+        self.customView = self.view as? ProductView
+    }
+    
+    private func initPresenter()
+    {
+        
+    }
+}

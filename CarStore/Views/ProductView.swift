@@ -7,3 +7,8 @@
 //
 
 import UIKit
+
+class ProductView : UIView
+{
+    
+}

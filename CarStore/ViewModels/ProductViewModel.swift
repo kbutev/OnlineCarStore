@@ -7,3 +7,12 @@
 //
 
 import Foundation
+
+struct ProductViewModel
+{
+    let manufacturer: String?
+    let model: String?
+    let topSpeed: String?
+    let price: String?
+    let imageURL: String?
+}

@@ -41,6 +41,10 @@
 		B844567E21526B6D009F172C /* Car.swift in Sources */ = {isa = PBXBuildFile; fileRef = B844567D21526B6D009F172C /* Car.swift */; };
 		B844568021526B82009F172C /* ProductView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B844567F21526B82009F172C /* ProductView.swift */; };
 		B844568221526B94009F172C /* ProductViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B844568121526B94009F172C /* ProductViewModel.swift */; };
+		B873575721528B4F00D21D1F /* ProductView.xib in Resources */ = {isa = PBXBuildFile; fileRef = B873575621528B4F00D21D1F /* ProductView.xib */; };
+		B873575921528B5E00D21D1F /* BasketView.xib in Resources */ = {isa = PBXBuildFile; fileRef = B873575821528B5E00D21D1F /* BasketView.xib */; };
+		B873575B21528B6800D21D1F /* SettingsView.xib in Resources */ = {isa = PBXBuildFile; fileRef = B873575A21528B6800D21D1F /* SettingsView.xib */; };
+		B873575D21528B7500D21D1F /* CheckoutView.xib in Resources */ = {isa = PBXBuildFile; fileRef = B873575C21528B7500D21D1F /* CheckoutView.xib */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -101,6 +105,10 @@
 		B844567D21526B6D009F172C /* Car.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Car.swift; sourceTree = "<group>"; };
 		B844567F21526B82009F172C /* ProductView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProductView.swift; sourceTree = "<group>"; };
 		B844568121526B94009F172C /* ProductViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProductViewModel.swift; sourceTree = "<group>"; };
+		B873575621528B4F00D21D1F /* ProductView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ProductView.xib; sourceTree = "<group>"; };
+		B873575821528B5E00D21D1F /* BasketView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = BasketView.xib; sourceTree = "<group>"; };
+		B873575A21528B6800D21D1F /* SettingsView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = SettingsView.xib; sourceTree = "<group>"; };
+		B873575C21528B7500D21D1F /* CheckoutView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = CheckoutView.xib; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -258,6 +266,10 @@
 			isa = PBXGroup;
 			children = (
 				B8445673215266EA009F172C /* StoreView.xib */,
+				B873575621528B4F00D21D1F /* ProductView.xib */,
+				B873575821528B5E00D21D1F /* BasketView.xib */,
+				B873575A21528B6800D21D1F /* SettingsView.xib */,
+				B873575C21528B7500D21D1F /* CheckoutView.xib */,
 			);
 			path = Interface;
 			sourceTree = "<group>";
@@ -366,7 +378,11 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				B873575921528B5E00D21D1F /* BasketView.xib in Resources */,
+				B873575B21528B6800D21D1F /* SettingsView.xib in Resources */,
 				B8445674215266EA009F172C /* StoreView.xib in Resources */,
+				B873575721528B4F00D21D1F /* ProductView.xib in Resources */,
+				B873575D21528B7500D21D1F /* CheckoutView.xib in Resources */,
 				B844561821525F85009F172C /* Assets.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

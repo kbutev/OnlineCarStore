@@ -45,7 +45,7 @@ class StorePresenter
     }
 }
 
-// MARK: - Transformation
+// MARK: - Transformations
 extension StorePresenter
 {
     class func transformToViewModel(store: Store) -> StoreViewModel?

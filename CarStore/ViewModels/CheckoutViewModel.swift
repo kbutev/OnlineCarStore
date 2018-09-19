@@ -7,3 +7,9 @@
 //
 
 import Foundation
+
+struct CheckoutViewModel
+{
+    let totalCount: String
+    let totalPrice: String
+}
