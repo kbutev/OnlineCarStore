@@ -8,24 +8,51 @@
 
 import Foundation
 
+enum CurrencyName : String
+{
+    case USD = "USD"
+    case EUR = "EUR"
+    case CZK = "CZK"
+    case BGN = "BGN"
+}
+
+enum CurrencySymbols : String
+{
+    case USD = "$"
+    case EUR = "€"
+    case CZK = "Kč"
+    case BGN = "Лв."
+    
+    static func symbol(for language: CurrencyName) -> CurrencySymbols
+    {
+        switch language
+        {
+        case .USD: return .USD
+        case .EUR: return .EUR
+        case .BGN: return .BGN
+        case .CZK: return .CZK
+        }
+    }
+}
+
 enum StoreCurrencyError: Error {
     case jsonUnwrapError
 }
 
 struct StoreCurrency
 {
-    let name: LanguageName
-    let symbol: String
+    let name: CurrencyName
+    let symbol: CurrencySymbols
     let exchangeRate: Double
     
-    init(name: LanguageName, symbol: String, exchangeRate: Double)
+    init(name: CurrencyName, symbol: CurrencySymbols, exchangeRate: Double)
     {
         self.name = name
         self.symbol = symbol
         self.exchangeRate = exchangeRate
     }
     
-    init(withJSON json: [String : Any], defaultCurrency: StoreCurrency, currencyName: LanguageName) throws
+    init(withJSON json: [String : Any], defaultCurrency: StoreCurrency, currencyName: CurrencyName) throws
     {
         self.name = currencyName
         

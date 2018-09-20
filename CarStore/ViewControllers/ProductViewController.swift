@@ -14,15 +14,26 @@ class ProductViewController : UIViewController
     
     private var presenter: ProductPresenterDelegate? = nil
     
+    init(withPresenter presenter: ProductPresenter)
+    {
+        super.init(nibName: nil, bundle: nil)
+        
+        self.presenter = presenter
+        presenter.delegate = self
+    }
+    
+    required init?(coder aDecoder: NSCoder)
+    {
+        super.init(coder: aDecoder)
+    }
+    
     override func viewDidLoad()
     {
         super.viewDidLoad()
         
         initInterface()
         
-        initPresenter()
-        
-        self.presenter?.loadStore()
+        self.presenter?.updateInterface()
     }
     
     override func viewWillAppear(_ animated: Bool)
@@ -38,10 +49,39 @@ class ProductViewController : UIViewController
     private func initInterface()
     {
         self.customView = self.view as? ProductView
+        
+        navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Buy", style: .plain, target: self, action: #selector(actionBuy(_:)))
+    }
+}
+
+// MARK: - Delegate
+extension ProductViewController : ProductViewDelegate
+{
+    func update(model: ProductViewModel)
+    {
+        DispatchQueue.main.async {
+            if model.manufacturer != nil && model.model != nil
+            {
+                self.navigationItem.title = String("\(model.manufacturer!) \(model.model!)")
+            }
+            
+            self.customView?.update(model: model)
+        }
     }
     
-    private func initPresenter()
+    func buyCarAndGoBack(car: Car)
     {
         
+        navigationController?.popViewController(animated: true)
+    }
+}
+
+// MARK: - Navigation right button action
+extension ProductViewController
+{
+    @objc
+    func actionBuy(_ sender: Any)
+    {
+        presenter?.buyCar()
     }
 }

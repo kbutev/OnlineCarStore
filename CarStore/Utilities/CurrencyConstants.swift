@@ -10,6 +10,6 @@ import Foundation
 
 struct CurrencyConstants
 {
-    static let DEFAULT_CURRENCY = StoreCurrency(name: .USD, symbol: CurrencySymbols.symbol(for: .USD), exchangeRate: 1.0)
-    static let DESIRED_CURRENCIES : [LanguageName] = [.USD, .EUR, .BGN, .CZK]
+    static let DEFAULT_CURRENCY = StoreCurrency(name: .USD, symbol: .USD, exchangeRate: 1.0)
+    static let DESIRED_CURRENCIES : [CurrencyName] = [.USD, .EUR, .BGN, .CZK]
 }

@@ -12,14 +12,16 @@ struct Car
 {
     let manufacturer: String
     let model: String
+    let description: String
     let topSpeed: Int
     let price: Int
     let imageURL: String?
     
-    init(manufacturer: String, model: String, topSpeed: Int, price: Int, imageURL: String?)
+    init(manufacturer: String, model: String, description: String, topSpeed: Int, price: Int, imageURL: String?)
     {
         self.manufacturer = manufacturer
         self.model = model
+        self.description = description
         self.topSpeed = topSpeed
         self.price = price
         self.imageURL = imageURL
@@ -33,19 +35,9 @@ struct Car
         
         if var result = formatter.string(from: NSNumber(value: Double(price) * currency.exchangeRate))
         {
-            result.append(currency.symbol)
+            result.append(currency.symbol.rawValue)
             
             return result
-        }
-        
-        return nil
-    }
-    
-    func description(forCurrency currency: StoreCurrency) -> String?
-    {
-        if let price = getPriceWithSymbol(forCurrency: currency)
-        {
-            return String("\(manufacturer) \(model) for \(price)")
         }
         
         return nil

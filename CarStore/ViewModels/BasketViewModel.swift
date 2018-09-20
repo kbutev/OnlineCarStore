@@ -11,9 +11,11 @@ import Foundation
 struct BasketViewModel
 {
     let carDescriptions : [String]
+    let totalPrice: String?
     
-    init(carDescriptions: [String])
+    init(carDescriptions: [String], totalPrice: String?)
     {
         self.carDescriptions = carDescriptions
+        self.totalPrice = totalPrice
     }
 }

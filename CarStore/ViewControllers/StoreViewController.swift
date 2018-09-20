@@ -14,13 +14,24 @@ class StoreViewController : UIViewController
     
     private var presenter: StorePresenterDelegate? = nil
     
+    init(withPresenter presenter: StorePresenter)
+    {
+        super.init(nibName: nil, bundle: nil)
+        
+        self.presenter = presenter
+        presenter.delegate = self
+    }
+    
+    required init?(coder aDecoder: NSCoder)
+    {
+        super.init(coder: aDecoder)
+    }
+    
     override func viewDidLoad()
     {
         super.viewDidLoad()
         
         initInterface()
-        
-        initPresenter()
         
         self.presenter?.loadStore()
     }
@@ -37,25 +48,56 @@ class StoreViewController : UIViewController
     
     private func initInterface()
     {
+        navigationItem.title = "Pick car"
+        
+        navigationItem.leftBarButtonItem = UIBarButtonItem(title: "Basket", style: .plain, target: self, action: #selector(actionBasket(_:)))
+        navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Settings", style: .plain, target: self, action: #selector(actionSettings(_:)))
+        
         self.customView = self.view as? StoreView
+        self.customView?.delegate = self
+    }
+}
+
+// MARK: - Table selection action
+extension StoreViewController : UITableViewDelegate {
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        print("StoreViewController: selecting a product from the table")
+        
+        if let selectedRow = self.customView?.indexPathForSelectedRow
+        {
+            presenter?.goToProductScene(viewController: self, selectedRow: selectedRow)
+        }
+    }
+}
+
+// MARK: - Navigation item button actions
+extension StoreViewController {
+    @objc
+    func actionBasket(_ sender: Any)
+    {
+        //presenter?.buyCar()
     }
     
-    private func initPresenter()
+    @objc
+    func actionSettings(_ sender: Any)
     {
-        let presenter = StorePresenter()
-        self.presenter = presenter
-        presenter.delegate = self
+        //presenter?.buyCar()
     }
 }
 
 // MARK: - Delegate
 extension StoreViewController : StoreViewDelegate
 {
-    func update(dataSource: StoreViewDataSource?)
+    func updateStore(dataSource: StoreViewDataSource?)
     {
         DispatchQueue.main.async {
             self.customView?.dataSource = dataSource
             self.customView?.reloadData()
         }
+    }
+    
+    func updateBasket(basket: BasketViewModel)
+    {
+        self.customView?.updateBasket(model: basket)
     }
 }

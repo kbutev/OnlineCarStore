@@ -8,7 +8,11 @@
 
 import Foundation
 
-struct StoreSorting
+enum StoreSorting : String
 {
-    
+    case name = "name"
+    case priceHighest = "highest price"
+    case priceLowest = "lowest price"
+    case speedHighest = "highest speed"
+    case speedLowest = "lowest speed"
 }

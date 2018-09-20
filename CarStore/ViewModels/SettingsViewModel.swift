@@ -8,13 +8,8 @@
 
 import Foundation
 
-enum SettingsViewModelSorting
-{
-    case name, priceHighest, priceLowest, speedHighest, speedLowest
-}
-
 struct SettingsViewModel
 {
     let selectedCurrency : String
-    let selectedSort : SettingsViewModelSorting
+    let selectedSort : String
 }

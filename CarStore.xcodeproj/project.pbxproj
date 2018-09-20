@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		B82BE72F2153B7E300F31EA8 /* Router.swift in Sources */ = {isa = PBXBuildFile; fileRef = B82BE72E2153B7E300F31EA8 /* Router.swift */; };
 		B844561121525F84009F172C /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = B844561021525F84009F172C /* AppDelegate.swift */; };
 		B844561821525F85009F172C /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = B844561721525F85009F172C /* Assets.xcassets */; };
 		B844562621525F85009F172C /* CarStoreTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B844562521525F85009F172C /* CarStoreTests.swift */; };
@@ -31,7 +32,6 @@
 		B8445667215260F2009F172C /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B8445666215260F2009F172C /* SettingsView.swift */; };
 		B8445669215260FF009F172C /* CheckoutView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B8445668215260FF009F172C /* CheckoutView.swift */; };
 		B844566B2152610B009F172C /* NetworkErrors.swift in Sources */ = {isa = PBXBuildFile; fileRef = B844566A2152610B009F172C /* NetworkErrors.swift */; };
-		B844566D2152611E009F172C /* LanguageConstants.swift in Sources */ = {isa = PBXBuildFile; fileRef = B844566C2152611E009F172C /* LanguageConstants.swift */; };
 		B844566F21526126009F172C /* CurrencyConstants.swift in Sources */ = {isa = PBXBuildFile; fileRef = B844566E21526126009F172C /* CurrencyConstants.swift */; };
 		B8445674215266EA009F172C /* StoreView.xib in Resources */ = {isa = PBXBuildFile; fileRef = B8445673215266EA009F172C /* StoreView.xib */; };
 		B844567621526A35009F172C /* Store.swift in Sources */ = {isa = PBXBuildFile; fileRef = B844567521526A35009F172C /* Store.swift */; };
@@ -65,6 +65,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		B82BE72E2153B7E300F31EA8 /* Router.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Router.swift; sourceTree = "<group>"; };
 		B844560D21525F84009F172C /* CarStore.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = CarStore.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		B844561021525F84009F172C /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		B844561721525F85009F172C /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -95,7 +96,6 @@
 		B8445666215260F2009F172C /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
 		B8445668215260FF009F172C /* CheckoutView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CheckoutView.swift; sourceTree = "<group>"; };
 		B844566A2152610B009F172C /* NetworkErrors.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkErrors.swift; sourceTree = "<group>"; };
-		B844566C2152611E009F172C /* LanguageConstants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LanguageConstants.swift; sourceTree = "<group>"; };
 		B844566E21526126009F172C /* CurrencyConstants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CurrencyConstants.swift; sourceTree = "<group>"; };
 		B8445673215266EA009F172C /* StoreView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = StoreView.xib; sourceTree = "<group>"; };
 		B844567521526A35009F172C /* Store.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Store.swift; sourceTree = "<group>"; };
@@ -136,6 +136,14 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		B82BE72D2153B7D600F31EA8 /* Router */ = {
+			isa = PBXGroup;
+			children = (
+				B82BE72E2153B7E300F31EA8 /* Router.swift */,
+			);
+			path = Router;
+			sourceTree = "<group>";
+		};
 		B844560421525F84009F172C = {
 			isa = PBXGroup;
 			children = (
@@ -160,6 +168,7 @@
 			isa = PBXGroup;
 			children = (
 				B844561021525F84009F172C /* AppDelegate.swift */,
+				B82BE72D2153B7D600F31EA8 /* Router */,
 				B844563E21525FD1009F172C /* ViewControllers */,
 				B844564021525FE7009F172C /* Presenters */,
 				B844564121525FEC009F172C /* Models */,
@@ -256,7 +265,6 @@
 			isa = PBXGroup;
 			children = (
 				B844566A2152610B009F172C /* NetworkErrors.swift */,
-				B844566C2152611E009F172C /* LanguageConstants.swift */,
 				B844566E21526126009F172C /* CurrencyConstants.swift */,
 			);
 			path = Utilities;
@@ -417,7 +425,6 @@
 				B844567C21526B5F009F172C /* ProductPresenter.swift in Sources */,
 				B844565721526089009F172C /* StoreCurrency.swift in Sources */,
 				B8445667215260F2009F172C /* SettingsView.swift in Sources */,
-				B844566D2152611E009F172C /* LanguageConstants.swift in Sources */,
 				B844565D215260BB009F172C /* BasketViewModel.swift in Sources */,
 				B844564F21526048009F172C /* BasketPresenter.swift in Sources */,
 				B844567821526A3F009F172C /* Basket.swift in Sources */,
@@ -431,6 +438,7 @@
 				B844564D2152603F009F172C /* StorePresenter.swift in Sources */,
 				B844564B21526034009F172C /* CheckoutViewController.swift in Sources */,
 				B8445661215260D5009F172C /* CheckoutViewModel.swift in Sources */,
+				B82BE72F2153B7E300F31EA8 /* Router.swift in Sources */,
 				B844566F21526126009F172C /* CurrencyConstants.swift in Sources */,
 				B8445669215260FF009F172C /* CheckoutView.swift in Sources */,
 				B844564521526015009F172C /* StoreViewController.swift in Sources */,

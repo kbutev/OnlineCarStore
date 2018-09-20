@@ -42,19 +42,22 @@ class StoreViewDataSource : NSObject, UITableViewDataSource
     }
 }
 
-class StoreView : UITableView
+class StoreView : UIView
 {
     static let CELL_IDENTIFIER = "Product"
     
-    override init(frame: CGRect, style: UITableView.Style)
+    @IBOutlet private weak var table: UITableView!
+    @IBOutlet private weak var toolbar: UIToolbar!
+    @IBOutlet weak var toolbarItem: UIBarButtonItem!
+    
+    override init(frame: CGRect)
     {
-        super.init(frame: frame, style: style)
-        register(UITableViewCell.self, forCellReuseIdentifier: StoreView.CELL_IDENTIFIER)
+        super.init(frame: frame)
+        
     }
     
     required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
-        register(UITableViewCell.self, forCellReuseIdentifier: StoreView.CELL_IDENTIFIER)
     }
     
     override func didMoveToSuperview()
@@ -64,13 +67,68 @@ class StoreView : UITableView
     
     private func setup()
     {
-        guard let parent = superview else {
-            return
+        table.register(UITableViewCell.self, forCellReuseIdentifier: StoreView.CELL_IDENTIFIER)
+        table.register(UITableViewCell.self, forCellReuseIdentifier: StoreView.CELL_IDENTIFIER)
+        
+        let layoutGuide = self.safeAreaLayoutGuide
+        
+        toolbar.translatesAutoresizingMaskIntoConstraints = false
+        toolbar.widthAnchor.constraint(equalTo: self.widthAnchor, multiplier: 1.0).isActive = true
+        toolbar.bottomAnchor.constraint(equalTo: layoutGuide.bottomAnchor, constant: 0).isActive = true
+        
+        self.bringSubviewToFront(toolbar)
+    }
+    
+    func updateBasket(model: BasketViewModel)
+    {
+        if let totalPrice = model.totalPrice
+        {
+            DispatchQueue.main.async {
+                if model.carDescriptions.count != 0
+                {
+                    self.toolbarItem.title = String("Basket: \(model.carDescriptions.count) cars, \(totalPrice) total")
+                }
+                else
+                {
+                    self.toolbarItem.title = String("Empty basket")
+                }
+            }
+        }
+    }
+}
+
+// MARK: - Table
+extension StoreView
+{
+    var delegate : UITableViewDelegate? {
+        set {
+            table.delegate = newValue
         }
         
-        translatesAutoresizingMaskIntoConstraints = false
-        widthAnchor.constraint(equalTo: parent.widthAnchor, multiplier: 1).isActive = true
-        heightAnchor.constraint(equalTo: parent.heightAnchor, multiplier: 1).isActive = true
+        get {
+            return table.delegate
+        }
+    }
+    
+    var dataSource : UITableViewDataSource? {
+        set {
+            table.dataSource = newValue
+        }
+        
+        get {
+            return table.dataSource
+        }
+    }
+    
+    var indexPathForSelectedRow : IndexPath? {
+        get {
+            return table.indexPathForSelectedRow
+        }
+    }
+    
+    func reloadData()
+    {
+        table.reloadData()
     }
 }
 

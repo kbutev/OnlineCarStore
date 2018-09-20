@@ -17,15 +17,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     {
         window = UIWindow(frame: UIScreen.main.bounds)
         
-        // Create navigation controller as root controller
-        let navigation = UINavigationController(navigationBarClass: nil, toolbarClass: nil)
-        window!.rootViewController = navigation
-        
-        // Create a master controller and push it to navigation
-        navigation.pushViewController(StoreViewController(), animated: false)
-        
-        // Activate window
-        window!.makeKeyAndVisible()
+        Router.singleton.configurate(window: window)
         
         return true
     }
