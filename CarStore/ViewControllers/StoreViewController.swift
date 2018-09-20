@@ -65,7 +65,7 @@ extension StoreViewController : UITableViewDelegate {
         
         if let selectedRow = self.customView?.indexPathForSelectedRow
         {
-            presenter?.goToProductScene(viewController: self, selectedRow: selectedRow)
+            presenter?.goToProductScene(atTableIndex: selectedRow)
         }
     }
 }
@@ -75,13 +75,13 @@ extension StoreViewController {
     @objc
     func actionBasket(_ sender: Any)
     {
-        //presenter?.buyCar()
+        presenter?.goToBasket()
     }
     
     @objc
     func actionSettings(_ sender: Any)
     {
-        //presenter?.buyCar()
+        presenter?.goToSettings()
     }
 }
 
@@ -90,10 +90,7 @@ extension StoreViewController : StoreViewDelegate
 {
     func updateStore(dataSource: StoreViewDataSource?)
     {
-        DispatchQueue.main.async {
-            self.customView?.dataSource = dataSource
-            self.customView?.reloadData()
-        }
+        self.customView?.updateStore(dataSource: dataSource)
     }
     
     func updateBasket(basket: BasketViewModel)

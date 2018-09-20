@@ -11,7 +11,9 @@ import UIKit
 protocol RouterProtocol : AnyObject
 {
     func goToStoreProduct(withCar car: Car, defaultCurrency: StoreCurrency)
-    func goBackToStore(withPurchasedCar car: Car)
+    func goBackFromStoreProduct(withPurchasedCar car: Car)
+    func goToBasket(withBasket viewModel: BasketViewModel)
+    func goToSettings()
 }
 
 class Router
@@ -62,10 +64,22 @@ extension Router : RouterProtocol
         self.navigationController?.pushViewController(destination, animated: true)
     }
     
-    func goBackToStore(withPurchasedCar car: Car)
+    func goBackFromStoreProduct(withPurchasedCar car: Car)
     {
         self.defaultPresenter?.addCarToBasket(car: car)
         
         self.navigationController?.popViewController(animated: true)
+    }
+    
+    func goToBasket(withBasket viewModel: BasketViewModel)
+    {
+        let destination = BasketViewController(withPresenter: BasketPresenter(withRouter:self, basket: viewModel))
+        
+        self.navigationController?.pushViewController(destination, animated: true)
+    }
+    
+    func goToSettings()
+    {
+        
     }
 }

@@ -79,14 +79,26 @@ class StoreView : UIView
         self.bringSubviewToFront(toolbar)
     }
     
-    func updateBasket(model: BasketViewModel)
+    func updateStore(dataSource: StoreViewDataSource?)
     {
-        if let totalPrice = model.totalPrice
+        DispatchQueue.main.async {
+            self.table.dataSource = dataSource
+            self.table.reloadData()
+        }
+    }
+    
+    func updateBasket(model: BasketViewModel?)
+    {
+        guard let _ = model else {
+            return
+        }
+        
+        if let totalPrice = model!.totalPrice
         {
             DispatchQueue.main.async {
-                if model.carDescriptions.count != 0
+                if model!.carDescriptions.count != 0
                 {
-                    self.toolbarItem.title = String("Basket: \(model.carDescriptions.count) cars, \(totalPrice) total")
+                    self.toolbarItem.title = String("Basket: \(model!.carDescriptions.count) cars, \(totalPrice) total")
                 }
                 else
                 {

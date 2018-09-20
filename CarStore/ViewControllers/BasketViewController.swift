@@ -14,15 +14,26 @@ class BasketViewController : UIViewController
     
     private var presenter: BasketPresenterDelegate? = nil
     
+    init(withPresenter presenter: BasketPresenter)
+    {
+        super.init(nibName: nil, bundle: nil)
+        
+        self.presenter = presenter
+        presenter.delegate = self
+    }
+    
+    required init?(coder aDecoder: NSCoder)
+    {
+        super.init(coder: aDecoder)
+    }
+    
     override func viewDidLoad()
     {
         super.viewDidLoad()
         
         initInterface()
         
-        initPresenter()
-        
-        self.presenter?.loadStore()
+        presenter?.update()
     }
     
     override func viewWillAppear(_ animated: Bool)
@@ -37,11 +48,17 @@ class BasketViewController : UIViewController
     
     private func initInterface()
     {
+        navigationItem.title = "Basket"
+        
         self.customView = self.view as? BasketView
     }
-    
-    private func initPresenter()
+}
+
+// MARK: - Delegate
+extension BasketViewController : BasketViewDelegate
+{
+    func update(viewModel: BasketViewModel?, dataSource: BasketViewDataSource?)
     {
-        
+        self.customView?.update(viewModel: viewModel, dataSource: dataSource)
     }
 }

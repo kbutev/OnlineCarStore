@@ -17,8 +17,11 @@ protocol StoreViewDelegate: AnyObject
 protocol StorePresenterDelegate: AnyObject
 {
     func loadStore()
-    func goToProductScene(viewController: UIViewController, selectedRow: IndexPath)
     func addCarToBasket(car: Car)
+    
+    func goToProductScene(atTableIndex index: IndexPath)
+    func goToBasket()
+    func goToSettings()
 }
 
 class StorePresenter
@@ -50,6 +53,39 @@ class StorePresenter
         let c = Car(manufacturer: "Toyota", model: "rav4", description: "The vehicle was designed for consumers wanting a vehicle that had most of the benefits of SUVs, such as increased cargo room, higher visibility, and the option of full-time four-wheel drive, along with the maneuverability and fuel economy of a compact car. Although not all RAV4s are four-wheel-drive, RAV4 stands for \"Recreational Activity Vehicle: 4-wheel drive\".", topSpeed: 200, price: 12000, imageURL: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ2eheIR9WIlKC_7KIWJWON5umqZ0iiSk7uNoG_UhO_sh_vh2EXag")
         
         self.store = Store(withCars: [a, b, c], defaultCurrency: CurrencyConstants.DEFAULT_CURRENCY)
+    }
+    
+    private func getBasketViewModel() -> BasketViewModel?
+    {
+        guard let store = self.store else {
+            return nil
+        }
+        
+        guard let basket = self.basket else {
+            return nil
+        }
+        
+        var carDescriptions: [String] = []
+        
+        for car in basket.cars
+        {
+            // All car descriptions must be successfully built, otherwise this function does nothing
+            if let description = StorePresenter.transformCarToCarDescription(car: car, defaultCurrency: store.defaultCurrency)
+            {
+                carDescriptions.append(description)
+            }
+            else
+            {
+                return nil
+            }
+        }
+        
+        if let totalPrice = self.basket!.getTotalPriceWithSymbol(forCurrency: store.defaultCurrency)
+        {
+            return BasketViewModel(carDescriptions: carDescriptions, totalPrice: totalPrice)
+        }
+        
+        return nil
     }
 }
 
@@ -87,25 +123,9 @@ extension StorePresenter : StorePresenterDelegate
         })*/
     }
     
-    func goToProductScene(viewController: UIViewController, selectedRow: IndexPath)
-    {
-        guard let store = self.store else {
-            return
-        }
-        
-        if (0..<store.cars.count).contains(selectedRow.row)
-        {
-            router.goToStoreProduct(withCar: store.cars[selectedRow.row], defaultCurrency: store.defaultCurrency)
-        }
-    }
-    
     func addCarToBasket(car: Car)
     {
         guard let _ = self.basket else {
-            return
-        }
-        
-        guard let store = self.store else {
             return
         }
         
@@ -113,27 +133,38 @@ extension StorePresenter : StorePresenterDelegate
         self.basket!.add(car)
         
         // Construct the view model and pass it to view delegate
-        var carDescriptions: [String] = []
-        
-        for car in self.basket!.cars
+        if let viewModel = getBasketViewModel()
         {
-            // All car descriptions must be successfully built, otherwise this function does nothing
-            if let description = StorePresenter.transformCarToCarDescription(car: car, defaultCurrency: store.defaultCurrency)
-            {
-                carDescriptions.append(description)
-            }
-            else
-            {
-                return
-            }
-        }
-        
-        if let totalPrice = self.basket!.getTotalPriceWithSymbol(forCurrency: store.defaultCurrency)
-        {
-            let viewModel = BasketViewModel(carDescriptions: carDescriptions, totalPrice: totalPrice)
-            
             self.delegate?.updateBasket(basket: viewModel)
         }
+    }
+    
+    func goToProductScene(atTableIndex index: IndexPath)
+    {
+        guard let store = self.store else {
+            return
+        }
+        
+        if (0..<store.cars.count).contains(index.row)
+        {
+            router.goToStoreProduct(withCar: store.cars[index.row], defaultCurrency: store.defaultCurrency)
+        }
+    }
+    
+    func goToBasket()
+    {
+        if let basket = self.basket
+        {
+            if let viewModel = getBasketViewModel()
+            {
+                router.goToBasket(withBasket: viewModel)
+            }
+        }
+    }
+    
+    func goToSettings()
+    {
+        router.goToSettings()
     }
 }
 

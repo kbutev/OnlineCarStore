@@ -7,3 +7,18 @@
 //
 
 import UIKit
+
+protocol SettingsViewDelegate: AnyObject
+{
+    func update(dataSource: StoreViewDataSource?)
+}
+
+protocol SettingsPresenterDelegate: AnyObject
+{
+    func loadStore()
+}
+
+class SettingsPresenter
+{
+    
+}

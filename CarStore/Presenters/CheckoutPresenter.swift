@@ -7,3 +7,18 @@
 //
 
 import UIKit
+
+protocol CheckoutViewDelegate: AnyObject
+{
+    func update(dataSource: StoreViewDataSource?)
+}
+
+protocol CheckoutPresenterDelegate: AnyObject
+{
+    func loadStore()
+}
+
+class CheckoutPresenter
+{
+    
+}

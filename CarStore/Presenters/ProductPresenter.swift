@@ -56,6 +56,6 @@ extension ProductPresenter : ProductPresenterDelegate
     
     func buyCar()
     {
-        router.goBackToStore(withPurchasedCar: car)
+        router.goBackFromStoreProduct(withPurchasedCar: car)
     }
 }

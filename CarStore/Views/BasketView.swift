@@ -8,19 +8,56 @@
 
 import UIKit
 
-class BasketView : UITableView
+class BasketViewDataSource : NSObject, UITableViewDataSource
+{
+    private let model : BasketViewModel?
+    
+    init(model : BasketViewModel?)
+    {
+        self.model = model
+    }
+    
+    func numberOfSections(in tableView: UITableView) -> Int {
+        return 1
+    }
+    
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        if let model = self.model
+        {
+            return model.carDescriptions.count
+        }
+        
+        return 0
+    }
+    
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cell = tableView.dequeueReusableCell(withIdentifier: BasketView.CELL_IDENTIFIER, for: indexPath)
+        
+        if let carName = model?.carDescriptions[indexPath.row]
+        {
+            cell.textLabel!.text = carName
+        }
+        
+        return cell
+    }
+}
+
+class BasketView : UIView
 {
     static let CELL_IDENTIFIER = "Item"
     
-    override init(frame: CGRect, style: UITableView.Style)
+    @IBOutlet private weak var table: UITableView!
+    @IBOutlet private weak var toolbar: UIToolbar!
+    @IBOutlet private weak var toolbarItem: UIBarButtonItem!
+    
+    override init(frame: CGRect)
     {
-        super.init(frame: frame, style: style)
-        register(UITableViewCell.self, forCellReuseIdentifier: BasketView.CELL_IDENTIFIER)
+        super.init(frame: frame)
     }
     
-    required init?(coder aDecoder: NSCoder) {
+    required init?(coder aDecoder: NSCoder)
+    {
         super.init(coder: aDecoder)
-        register(UITableViewCell.self, forCellReuseIdentifier: BasketView.CELL_IDENTIFIER)
     }
     
     override func didMoveToSuperview()
@@ -30,12 +67,48 @@ class BasketView : UITableView
     
     private func setup()
     {
-        guard let parent = superview else {
-            return
-        }
+        table.register(UITableViewCell.self, forCellReuseIdentifier: BasketView.CELL_IDENTIFIER)
+        table.register(UITableViewCell.self, forCellReuseIdentifier: BasketView.CELL_IDENTIFIER)
         
-        translatesAutoresizingMaskIntoConstraints = false
-        widthAnchor.constraint(equalTo: parent.widthAnchor, multiplier: 1).isActive = true
-        heightAnchor.constraint(equalTo: parent.heightAnchor, multiplier: 1).isActive = true
+        let layoutGuide = self.safeAreaLayoutGuide
+        
+        toolbar.translatesAutoresizingMaskIntoConstraints = false
+        toolbar.widthAnchor.constraint(equalTo: self.widthAnchor, multiplier: 1.0).isActive = true
+        toolbar.bottomAnchor.constraint(equalTo: layoutGuide.bottomAnchor, constant: 0).isActive = true
+        
+        self.bringSubviewToFront(toolbar)
+    }
+    
+    func update(viewModel: BasketViewModel?, dataSource: BasketViewDataSource?)
+    {
+        DispatchQueue.main.async {
+            self.table.dataSource = dataSource
+            self.table.reloadData()
+            
+            if let model = viewModel
+            {
+                if let totalPrice = model.totalPrice
+                {
+                    if model.carDescriptions.count != 0
+                    {
+                        self.toolbarItem.title = String("Basket: \(model.carDescriptions.count) cars, \(totalPrice) total")
+                    }
+                    else
+                    {
+                        self.toolbarItem.title = String("Empty basket")
+                    }
+                }
+            }
+        }
+    }
+}
+
+// MARK: - Table
+extension BasketView
+{
+    var indexPathForSelectedRow : IndexPath? {
+        get {
+            return table.indexPathForSelectedRow
+        }
     }
 }
