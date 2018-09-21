@@ -14,17 +14,15 @@ protocol RouterProtocol : AnyObject
     func goBackFromStoreProduct(withPurchasedCar car: Car)
     
     func goToBasket(withBasket basket: Basket)
-    func goBackFromBasket()
-    func goBackFromBasketProduct()
     func goBackFromBasketProduct(withBasket basket: Basket)
     func goToBasketProduct(withBasket basket: Basket, withCar car: Car)
     
     func goToCheckout(withBasket basket: Basket)
-    func goBackFromCheckout()
     
     func goBackAndBuyCars()
     
-    func goToSettings()
+    func goToSettings(defaultCurrency: StoreCurrency, currencies: [StoreCurrency])
+    func goBackFromSettings(selectedCurrency: StoreCurrency)
 }
 
 class Router
@@ -113,15 +111,6 @@ extension Router : RouterProtocol
         navigationController.pushViewController(destination, animated: true)
     }
     
-    func goBackFromBasket()
-    {
-        guard let navigationController = rootNavigationController() else {
-            return
-        }
-        
-        navigationController.popViewController(animated: true)
-    }
-    
     func goToBasketProduct(withBasket basket: Basket, withCar car: Car)
     {
         guard let navigationController = rootNavigationController() else {
@@ -131,15 +120,6 @@ extension Router : RouterProtocol
         let destination = BasketProductViewController(withPresenter: BasketProductPresenter(withRouter:self, basket: basket, car: car))
         
         navigationController.pushViewController(destination, animated: true)
-    }
-    
-    func goBackFromBasketProduct()
-    {
-        guard let navigationController = rootNavigationController() else {
-            return
-        }
-        
-        navigationController.popViewController(animated: true)
     }
     
     func goBackFromBasketProduct(withBasket basket: Basket)
@@ -169,15 +149,6 @@ extension Router : RouterProtocol
         navigationController.pushViewController(destination, animated: true)
     }
     
-    func goBackFromCheckout()
-    {
-        guard let navigationController = rootNavigationController() else {
-            return
-        }
-        
-        navigationController.popViewController(animated: true)
-    }
-    
     func goBackAndBuyCars()
     {
         guard let navigationController = rootNavigationController() else {
@@ -185,17 +156,30 @@ extension Router : RouterProtocol
         }
         
         navigationController.popViewController(animated: false)
-        navigationController.popViewController(animated: false)
+        navigationController.popViewController(animated: true)
         
         defaultPresenter?.clearBasketCars()
     }
     
-    func goToSettings()
+    func goToSettings(defaultCurrency: StoreCurrency, currencies: [StoreCurrency])
     {
         guard let navigationController = rootNavigationController() else {
             return
         }
         
+        let destination = SettingsViewController(withPresenter: SettingsPresenter(withRouter:self, defaultCurrency: defaultCurrency, currencies: currencies))
         
+        navigationController.pushViewController(destination, animated: true)
+    }
+    
+    func goBackFromSettings(selectedCurrency: StoreCurrency)
+    {
+        guard let navigationController = rootNavigationController() else {
+            return
+        }
+        
+        defaultPresenter?.setDefaultCurrency(defaultCurrency: selectedCurrency)
+        
+        navigationController.popViewController(animated: true)
     }
 }

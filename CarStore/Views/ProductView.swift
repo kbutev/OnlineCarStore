@@ -48,7 +48,11 @@ class ProductView : UIView
         labelDescription.topAnchor.constraint(equalTo: imagePicture.bottomAnchor, constant: 0.0).isActive = true
         labelDescription.centerXAnchor.constraint(equalTo: layoutGuide.centerXAnchor).isActive = true
     }
-    
+}
+
+// MARK: - Methods used by the view controller to manipulate the interface
+extension ProductView
+{
     func update(viewModel: ProductViewModel?)
     {
         guard let model = viewModel else {

@@ -93,8 +93,8 @@ extension StoreViewController : StoreViewDelegate
         self.customView?.updateStore(dataSource: dataSource)
     }
     
-    func updateBasket(basket: BasketViewModel)
+    func updateBasket(viewModel: BasketViewModel?)
     {
-        self.customView?.updateBasket(viewModel: basket)
+        self.customView?.updateBasket(viewModel: viewModel)
     }
 }

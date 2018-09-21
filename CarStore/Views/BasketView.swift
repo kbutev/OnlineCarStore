@@ -82,7 +82,11 @@ class BasketView : UIView
         
         self.bringSubviewToFront(toolbar)
     }
-    
+}
+
+// MARK: - Methods used by the view controller to manipulate the interface
+extension BasketView
+{
     func update(viewModel: BasketViewModel?, dataSource: BasketViewDataSource?)
     {
         DispatchQueue.main.async {

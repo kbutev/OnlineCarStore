@@ -10,11 +10,11 @@ import UIKit
 
 class StoreViewDataSource : NSObject, UITableViewDataSource
 {
-    private let model : StoreViewModel?
+    private let viewModel : StoreViewModel?
     
-    init(model : StoreViewModel?)
+    init(viewModel : StoreViewModel?)
     {
-        self.model = model
+        self.viewModel = viewModel
     }
     
     func numberOfSections(in tableView: UITableView) -> Int {
@@ -22,7 +22,7 @@ class StoreViewDataSource : NSObject, UITableViewDataSource
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        if let model = self.model
+        if let model = self.viewModel
         {
             return model.carDescriptions.count
         }
@@ -33,7 +33,7 @@ class StoreViewDataSource : NSObject, UITableViewDataSource
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: StoreView.CELL_IDENTIFIER, for: indexPath)
         
-        if let carName = model?.carDescriptions[indexPath.row]
+        if let carName = viewModel?.carDescriptions[indexPath.row]
         {
             cell.textLabel!.text = carName
         }
@@ -82,7 +82,11 @@ class StoreView : UIView
         
         self.bringSubviewToFront(toolbar)
     }
-    
+}
+
+// MARK: - Methods used by the view controller to manipulate the interface
+extension StoreView
+{
     func updateStore(dataSource: StoreViewDataSource?)
     {
         DispatchQueue.main.async {

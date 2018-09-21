@@ -10,12 +10,12 @@ import UIKit
 
 protocol BasketProductViewDelegate: AnyObject
 {
-    func update(model: BasketProductViewModel)
+    func update(viewModel: BasketProductViewModel?)
 }
 
 protocol BasketProductPresenterDelegate: AnyObject
 {
-    func updateInterface()
+    func update()
     func removeCar()
 }
 
@@ -27,7 +27,7 @@ class BasketProductPresenter
     
     private var basket: Basket?
     private let car: Car
-    private let viewModel: BasketProductViewModel
+    private let viewModel: BasketProductViewModel?
     
     required init(withRouter router: Router = Router.singleton, basket: Basket, car: Car)
     {
@@ -48,9 +48,9 @@ class BasketProductPresenter
 // MARK: - Delegate
 extension BasketProductPresenter : BasketProductPresenterDelegate
 {
-    func updateInterface()
+    func update()
     {
-        self.delegate?.update(model: viewModel)
+        self.delegate?.update(viewModel: viewModel)
     }
     
     func removeCar()

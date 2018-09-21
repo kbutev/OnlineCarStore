@@ -50,6 +50,8 @@ class CheckoutViewController : UIViewController
     {
         self.customView = self.view as? CheckoutView
         
+        navigationItem.title = "Checkout"
+        
         navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Buy cars!", style: .plain, target: self, action: #selector(actionBuyCars(_:)))
     }
 }

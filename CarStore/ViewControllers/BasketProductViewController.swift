@@ -33,7 +33,7 @@ class BasketProductViewController : UIViewController
         
         initInterface()
         
-        self.presenter?.updateInterface()
+        self.presenter?.update()
     }
     
     override func viewWillAppear(_ animated: Bool)
@@ -57,15 +57,18 @@ class BasketProductViewController : UIViewController
 // MARK: - Delegate
 extension BasketProductViewController : BasketProductViewDelegate
 {
-    func update(model: BasketProductViewModel)
+    func update(viewModel: BasketProductViewModel?)
     {
         DispatchQueue.main.async {
-            if model.manufacturer != nil && model.model != nil
+            if let model = viewModel
             {
-                self.navigationItem.title = String("\(model.manufacturer!) \(model.model!)")
+                if model.manufacturer != nil && model.model != nil
+                {
+                    self.navigationItem.title = String("\(model.manufacturer!) \(model.model!)")
+                }
             }
             
-            self.customView?.update(viewModel: model)
+            self.customView?.update(viewModel: viewModel)
         }
     }
     

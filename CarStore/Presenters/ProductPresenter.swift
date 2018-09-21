@@ -10,7 +10,7 @@ import UIKit
 
 protocol ProductViewDelegate: AnyObject
 {
-    func update(model: ProductViewModel)
+    func update(viewModel: ProductViewModel?)
 }
 
 protocol ProductPresenterDelegate: AnyObject
@@ -59,10 +59,7 @@ extension ProductPresenter : ProductPresenterDelegate
 {
     func updateInterface()
     {
-        if let model = viewModel
-        {
-            self.delegate?.update(model: model)
-        }
+        self.delegate?.update(viewModel: viewModel)
     }
     
     func buyCar()

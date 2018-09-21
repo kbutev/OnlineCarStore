@@ -11,7 +11,7 @@ import Foundation
 struct Basket
 {
     var cars: [Car]
-    let defaultCurrency: StoreCurrency
+    var defaultCurrency: StoreCurrency
     
     init(defaultCurrency: StoreCurrency)
     {

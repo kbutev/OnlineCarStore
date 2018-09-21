@@ -11,7 +11,7 @@ import Foundation
 struct Store
 {
     let cars: [Car]
-    let defaultCurrency: StoreCurrency
+    var defaultCurrency: StoreCurrency
     let currencies: [StoreCurrency]
     
     init(withCars cars: [Car], defaultCurrency: StoreCurrency)

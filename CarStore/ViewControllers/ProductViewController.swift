@@ -50,22 +50,25 @@ class ProductViewController : UIViewController
     {
         self.customView = self.view as? ProductView
         
-        navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Buy", style: .plain, target: self, action: #selector(actionBuy(_:)))
+        navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Buy car", style: .plain, target: self, action: #selector(actionBuy(_:)))
     }
 }
 
 // MARK: - Delegate
 extension ProductViewController : ProductViewDelegate
 {
-    func update(model: ProductViewModel)
+    func update(viewModel: ProductViewModel?)
     {
         DispatchQueue.main.async {
-            if model.manufacturer != nil && model.model != nil
+            if let model = viewModel
             {
-                self.navigationItem.title = String("\(model.manufacturer!) \(model.model!)")
+                if model.manufacturer != nil && model.model != nil
+                {
+                    self.navigationItem.title = String("\(model.manufacturer!) \(model.model!)")
+                }
             }
             
-            self.customView?.update(viewModel: model)
+            self.customView?.update(viewModel: viewModel)
         }
     }
 }

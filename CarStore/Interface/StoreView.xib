@@ -25,7 +25,7 @@
                     <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
                     <items>
                         <barButtonItem title="Empty basket" id="dYP-GN-aRU">
-                            <color key="tintColor" red="1" green="0.15872932179161192" blue="0.17342346618650972" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                            <color key="tintColor" red="1" green="0.61406327999999999" blue="0.192366815" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         </barButtonItem>
                     </items>
                 </toolbar>
