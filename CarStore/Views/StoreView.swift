@@ -72,6 +72,10 @@ class StoreView : UIView
         
         let layoutGuide = self.safeAreaLayoutGuide
         
+        table.translatesAutoresizingMaskIntoConstraints = false
+        table.widthAnchor.constraint(equalTo: self.widthAnchor, multiplier: 1.0).isActive = true
+        table.heightAnchor.constraint(equalTo: self.heightAnchor, multiplier: 1.0).isActive = true
+        
         toolbar.translatesAutoresizingMaskIntoConstraints = false
         toolbar.widthAnchor.constraint(equalTo: self.widthAnchor, multiplier: 1.0).isActive = true
         toolbar.bottomAnchor.constraint(equalTo: layoutGuide.bottomAnchor, constant: 0).isActive = true
@@ -87,18 +91,18 @@ class StoreView : UIView
         }
     }
     
-    func updateBasket(model: BasketViewModel?)
+    func updateBasket(viewModel: BasketViewModel?)
     {
-        guard let _ = model else {
+        guard let model = viewModel else {
             return
         }
         
-        if let totalPrice = model!.totalPrice
+        if let totalPrice = model.totalPrice
         {
             DispatchQueue.main.async {
-                if model!.carDescriptions.count != 0
+                if model.carDescriptions.count != 0
                 {
-                    self.toolbarItem.title = String("Basket: \(model!.carDescriptions.count) cars, \(totalPrice) total")
+                    self.toolbarItem.title = String("Basket: \(model.carDescriptions.count) cars, \(totalPrice) total")
                 }
                 else
                 {

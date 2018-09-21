@@ -17,7 +17,11 @@ protocol StoreViewDelegate: AnyObject
 protocol StorePresenterDelegate: AnyObject
 {
     func loadStore()
+    
+    func clearBasketCars()
+    func setBasketCars(cars: [Car])
     func addCarToBasket(car: Car)
+    func removeCarFromBasket(car: Car)
     
     func goToProductScene(atTableIndex index: IndexPath)
     func goToBasket()
@@ -54,39 +58,6 @@ class StorePresenter
         
         self.store = Store(withCars: [a, b, c], defaultCurrency: CurrencyConstants.DEFAULT_CURRENCY)
     }
-    
-    private func getBasketViewModel() -> BasketViewModel?
-    {
-        guard let store = self.store else {
-            return nil
-        }
-        
-        guard let basket = self.basket else {
-            return nil
-        }
-        
-        var carDescriptions: [String] = []
-        
-        for car in basket.cars
-        {
-            // All car descriptions must be successfully built, otherwise this function does nothing
-            if let description = StorePresenter.transformCarToCarDescription(car: car, defaultCurrency: store.defaultCurrency)
-            {
-                carDescriptions.append(description)
-            }
-            else
-            {
-                return nil
-            }
-        }
-        
-        if let totalPrice = self.basket!.getTotalPriceWithSymbol(forCurrency: store.defaultCurrency)
-        {
-            return BasketViewModel(carDescriptions: carDescriptions, totalPrice: totalPrice)
-        }
-        
-        return nil
-    }
 }
 
 // MARK: - Delegate
@@ -97,7 +68,7 @@ extension StorePresenter : StorePresenterDelegate
         initDefaultStore()
         
         // Delete this
-        self.dataSource = StoreViewDataSource(model: StorePresenter.transformToViewModel(store: self.store!))
+        self.dataSource = StoreViewDataSource(model: StorePresenter.transformToStoreViewModel(basket: self.basket!, store: self.store!))
         self.delegate?.updateStore(dataSource: self.dataSource)
         
         /*
@@ -123,17 +94,63 @@ extension StorePresenter : StorePresenterDelegate
         })*/
     }
     
+    func clearBasketCars()
+    {
+        guard let _ = self.basket else {
+            return
+        }
+        
+        self.basket!.cars = []
+        
+        // Construct the view model and pass it to view delegate
+        if let viewModel = StorePresenter.transformToBasketViewModel(basket: basket!)
+        {
+            self.delegate?.updateBasket(basket: viewModel)
+        }
+    }
+    
+    func setBasketCars(cars: [Car])
+    {
+        guard let _ = self.basket else {
+            return
+        }
+        
+        self.basket!.cars = cars
+        
+        // Construct the view model and pass it to view delegate
+        if let viewModel = StorePresenter.transformToBasketViewModel(basket: basket!)
+        {
+            self.delegate?.updateBasket(basket: viewModel)
+        }
+    }
+    
     func addCarToBasket(car: Car)
     {
         guard let _ = self.basket else {
             return
         }
         
-        // Update model
-        self.basket!.add(car)
+        // Update model by adding the car
+        basket!.add(car)
         
         // Construct the view model and pass it to view delegate
-        if let viewModel = getBasketViewModel()
+        if let viewModel = StorePresenter.transformToBasketViewModel(basket: basket!)
+        {
+            self.delegate?.updateBasket(basket: viewModel)
+        }
+    }
+    
+    func removeCarFromBasket(car: Car)
+    {
+        guard let _ = self.basket else {
+            return
+        }
+        
+        // Update model by removing the car
+        basket!.remove(car)
+        
+        // Construct the view model and pass it to view delegate
+        if let viewModel = StorePresenter.transformToBasketViewModel(basket: basket!)
         {
             self.delegate?.updateBasket(basket: viewModel)
         }
@@ -153,13 +170,11 @@ extension StorePresenter : StorePresenterDelegate
     
     func goToBasket()
     {
-        if let basket = self.basket
-        {
-            if let viewModel = getBasketViewModel()
-            {
-                router.goToBasket(withBasket: viewModel)
-            }
+        guard let basket = self.basket else {
+            return
         }
+        
+        router.goToBasket(withBasket: basket)
     }
     
     func goToSettings()
@@ -171,6 +186,31 @@ extension StorePresenter : StorePresenterDelegate
 // MARK: - Transformations
 extension StorePresenter
 {
+    class func transformToBasketViewModel(basket: Basket) -> BasketViewModel?
+    {
+        var carDescriptions: [String] = []
+        
+        for car in basket.cars
+        {
+            // All car descriptions must be successfully built, otherwise this function does nothing
+            if let description = StorePresenter.transformCarToCarDescription(car: car, defaultCurrency: basket.defaultCurrency)
+            {
+                carDescriptions.append(description)
+            }
+            else
+            {
+                return nil
+            }
+        }
+        
+        if let totalPrice = basket.getTotalPriceWithSymbol(forCurrency: basket.defaultCurrency)
+        {
+            return BasketViewModel(carDescriptions: carDescriptions, totalPrice: totalPrice)
+        }
+        
+        return nil
+    }
+    
     class func transformCarToCarDescription(car: Car, defaultCurrency: StoreCurrency) -> String?
     {
         if let price = car.getPriceWithSymbol(forCurrency: defaultCurrency)
@@ -181,14 +221,14 @@ extension StorePresenter
         return nil
     }
     
-    class func transformToViewModel(store: Store) -> StoreViewModel?
+    class func transformToStoreViewModel(basket: Basket, store: Store) -> StoreViewModel?
     {
         var carDescriptions : [String] = []
         
         for car in store.cars
         {
             // All car descriptions must be successfully built, otherwise a nil view model will be returned
-            if let description = StorePresenter.transformCarToCarDescription(car: car, defaultCurrency: store.defaultCurrency)
+            if let description = StorePresenter.transformCarToCarDescription(car: car, defaultCurrency: basket.defaultCurrency)
             {
                 carDescriptions.append(description)
             }
@@ -198,7 +238,14 @@ extension StorePresenter
             }
         }
         
-        return StoreViewModel(carDescriptions: carDescriptions)
+        if let totalPrice = basket.getTotalPriceWithSymbol(forCurrency: basket.defaultCurrency)
+        {
+            let basketDescription = String("Basket: \(carDescriptions.count) cars, \(totalPrice) total")
+            
+            return StoreViewModel(carDescriptions: carDescriptions, basketDescription: basketDescription)
+        }
+        
+        return nil
     }
 }
 

@@ -48,9 +48,24 @@ class BasketViewController : UIViewController
     
     private func initInterface()
     {
+        self.customView = self.view as? BasketView
+        self.customView?.delegate = self
+        
         navigationItem.title = "Basket"
         
-        self.customView = self.view as? BasketView
+        navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Checkout", style: .plain, target: self, action: #selector(actionCheckout(_:)))
+    }
+}
+
+// MARK: - Table selection action
+extension BasketViewController : UITableViewDelegate {
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        print("BasketViewController: selecting a basket product from the table")
+        
+        if let selectedRow = self.customView?.indexPathForSelectedRow
+        {
+            presenter?.goToProductScene(atTableIndex: selectedRow)
+        }
     }
 }
 
@@ -60,5 +75,19 @@ extension BasketViewController : BasketViewDelegate
     func update(viewModel: BasketViewModel?, dataSource: BasketViewDataSource?)
     {
         self.customView?.update(viewModel: viewModel, dataSource: dataSource)
+    }
+    
+    func deactivateCheckout()
+    {
+        navigationItem.rightBarButtonItem?.isEnabled = false
+    }
+}
+
+// MARK: - Navigation item button actions
+extension BasketViewController {
+    @objc
+    func actionCheckout(_ sender: Any)
+    {
+        presenter?.goToCheckout()
     }
 }

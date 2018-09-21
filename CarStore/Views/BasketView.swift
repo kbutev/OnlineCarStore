@@ -72,6 +72,10 @@ class BasketView : UIView
         
         let layoutGuide = self.safeAreaLayoutGuide
         
+        table.translatesAutoresizingMaskIntoConstraints = false
+        table.widthAnchor.constraint(equalTo: self.widthAnchor, multiplier: 1.0).isActive = true
+        table.heightAnchor.constraint(equalTo: self.heightAnchor, multiplier: 1.0).isActive = true
+        
         toolbar.translatesAutoresizingMaskIntoConstraints = false
         toolbar.widthAnchor.constraint(equalTo: self.widthAnchor, multiplier: 1.0).isActive = true
         toolbar.bottomAnchor.constraint(equalTo: layoutGuide.bottomAnchor, constant: 0).isActive = true
@@ -106,9 +110,34 @@ class BasketView : UIView
 // MARK: - Table
 extension BasketView
 {
+    var delegate : UITableViewDelegate? {
+        set {
+            table.delegate = newValue
+        }
+        
+        get {
+            return table.delegate
+        }
+    }
+    
+    var dataSource : UITableViewDataSource? {
+        set {
+            table.dataSource = newValue
+        }
+        
+        get {
+            return table.dataSource
+        }
+    }
+    
     var indexPathForSelectedRow : IndexPath? {
         get {
             return table.indexPathForSelectedRow
         }
+    }
+    
+    func reloadData()
+    {
+        table.reloadData()
     }
 }

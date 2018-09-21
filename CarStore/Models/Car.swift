@@ -43,3 +43,9 @@ struct Car
         return nil
     }
 }
+
+extension Car: Equatable {
+    static func == (lhs: Car, rhs: Car) -> Bool {
+        return lhs.manufacturer == rhs.manufacturer && lhs.model == rhs.model
+    }
+}

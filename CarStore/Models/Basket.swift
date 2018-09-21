@@ -30,6 +30,18 @@ struct Basket
         cars.append(car)
     }
     
+    mutating func remove(_ car: Car)
+    {
+        for e in 0..<cars.count
+        {
+            if cars[e] == car
+            {
+                cars.remove(at: e)
+                return
+            }
+        }
+    }
+    
     func getTotalPrice() -> Int
     {
         var price = 0

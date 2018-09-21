@@ -48,13 +48,13 @@ class StoreViewController : UIViewController
     
     private func initInterface()
     {
-        navigationItem.title = "Pick car"
+        self.customView = self.view as? StoreView
+        self.customView?.delegate = self
+        
+        navigationItem.title = "Car store"
         
         navigationItem.leftBarButtonItem = UIBarButtonItem(title: "Basket", style: .plain, target: self, action: #selector(actionBasket(_:)))
         navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Settings", style: .plain, target: self, action: #selector(actionSettings(_:)))
-        
-        self.customView = self.view as? StoreView
-        self.customView?.delegate = self
     }
 }
 
@@ -95,6 +95,6 @@ extension StoreViewController : StoreViewDelegate
     
     func updateBasket(basket: BasketViewModel)
     {
-        self.customView?.updateBasket(model: basket)
+        self.customView?.updateBasket(viewModel: basket)
     }
 }

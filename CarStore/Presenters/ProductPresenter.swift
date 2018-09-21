@@ -11,7 +11,6 @@ import UIKit
 protocol ProductViewDelegate: AnyObject
 {
     func update(model: ProductViewModel)
-    func buyCarAndGoBack(car: Car)
 }
 
 protocol ProductPresenterDelegate: AnyObject
@@ -26,9 +25,9 @@ class ProductPresenter
     
     weak var delegate: ProductViewDelegate?
     
-    let car: Car
-    let defaultCurrency: StoreCurrency
-    let viewModel: ProductViewModel
+    private let car: Car
+    private let defaultCurrency: StoreCurrency
+    private let viewModel: ProductViewModel?
     
     required init(withRouter router: Router = Router.singleton, car: Car, defaultCurrency: StoreCurrency)
     {
@@ -37,12 +36,21 @@ class ProductPresenter
         self.car = car
         self.defaultCurrency = defaultCurrency
         
-        self.viewModel = ProductViewModel(manufacturer: car.manufacturer,
-                                          model: car.model,
-                                          description: car.description,
-                                          topSpeed: String("\(car.topSpeed)km/h"),
-                                          price: car.getPriceWithSymbol(forCurrency: defaultCurrency),
-                                          imageURL: car.imageURL)
+        self.viewModel = ProductPresenter.transformToBasketViewModel(car: car, defaultCurrency: defaultCurrency)
+    }
+}
+
+// MARK: - Transformations
+extension ProductPresenter
+{
+    class func transformToBasketViewModel(car: Car, defaultCurrency: StoreCurrency) -> ProductViewModel?
+    {
+        return ProductViewModel(manufacturer: car.manufacturer,
+                                model: car.model,
+                                description: car.description,
+                                topSpeed: String("\(car.topSpeed)km/h"),
+                                price: car.getPriceWithSymbol(forCurrency: defaultCurrency),
+                                imageURL: car.imageURL)
     }
 }
 
@@ -51,7 +59,10 @@ extension ProductPresenter : ProductPresenterDelegate
 {
     func updateInterface()
     {
-        self.delegate?.update(model: viewModel)
+        if let model = viewModel
+        {
+            self.delegate?.update(model: model)
+        }
     }
     
     func buyCar()

@@ -10,6 +10,12 @@ import Foundation
 
 struct CheckoutViewModel
 {
-    let totalCount: String
-    let totalPrice: String
+    let carDescriptions : [String]
+    let basketDescription: String?
+    
+    init(carDescriptions: [String], basketDescription: String?)
+    {
+        self.carDescriptions = carDescriptions
+        self.basketDescription = basketDescription
+    }
 }

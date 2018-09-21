@@ -11,9 +11,11 @@ import Foundation
 struct StoreViewModel
 {
     let carDescriptions : [String]
+    let basketDescription: String?
     
-    init(carDescriptions: [String])
+    init(carDescriptions: [String], basketDescription: String?)
     {
         self.carDescriptions = carDescriptions
+        self.basketDescription = basketDescription
     }
 }

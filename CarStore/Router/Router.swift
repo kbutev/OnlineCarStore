@@ -12,7 +12,18 @@ protocol RouterProtocol : AnyObject
 {
     func goToStoreProduct(withCar car: Car, defaultCurrency: StoreCurrency)
     func goBackFromStoreProduct(withPurchasedCar car: Car)
-    func goToBasket(withBasket viewModel: BasketViewModel)
+    
+    func goToBasket(withBasket basket: Basket)
+    func goBackFromBasket()
+    func goBackFromBasketProduct()
+    func goBackFromBasketProduct(withBasket basket: Basket)
+    func goToBasketProduct(withBasket basket: Basket, withCar car: Car)
+    
+    func goToCheckout(withBasket basket: Basket)
+    func goBackFromCheckout()
+    
+    func goBackAndBuyCars()
+    
     func goToSettings()
 }
 
@@ -22,10 +33,8 @@ class Router
     
     private weak var window: UIWindow?
     
-    private var navigationController: UINavigationController?
-    
-    private var defaultViewController: StoreViewDelegate?
-    private var defaultPresenter: StorePresenterDelegate?
+    private weak var defaultViewController: StoreViewDelegate?
+    private weak var defaultPresenter: StorePresenterDelegate?
     
     init()
     {
@@ -37,8 +46,8 @@ class Router
         self.window = window
         
         // Create navigation controller as root controller
-        self.navigationController = UINavigationController(navigationBarClass: nil, toolbarClass: nil)
-        window!.rootViewController = self.navigationController
+        let navigationController = UINavigationController(navigationBarClass: nil, toolbarClass: nil)
+        window!.rootViewController = navigationController
         
         // Create default presenter
         let presenter = StorePresenter(withRouter: self)
@@ -47,10 +56,15 @@ class Router
         // Create default controller and push it to navigation as a root controller
         let viewController = StoreViewController(withPresenter: presenter)
         self.defaultViewController = viewController
-        self.navigationController?.pushViewController(viewController, animated: false)
+        navigationController.pushViewController(viewController, animated: false)
         
         // Activate window
         window!.makeKeyAndVisible()
+    }
+    
+    func rootNavigationController() -> UINavigationController?
+    {
+        return window?.rootViewController as? UINavigationController
     }
 }
 
@@ -59,27 +73,129 @@ extension Router : RouterProtocol
 {
     func goToStoreProduct(withCar car: Car, defaultCurrency: StoreCurrency)
     {
+        guard let navigationController = rootNavigationController() else {
+            return
+        }
+        
         let destination = ProductViewController(withPresenter: ProductPresenter(withRouter:self, car: car, defaultCurrency: defaultCurrency))
         
-        self.navigationController?.pushViewController(destination, animated: true)
+        navigationController.pushViewController(destination, animated: true)
+    }
+    
+    func goBackFromStoreProduct()
+    {
+        guard let navigationController = rootNavigationController() else {
+            return
+        }
+        
+        navigationController.popViewController(animated: true)
     }
     
     func goBackFromStoreProduct(withPurchasedCar car: Car)
     {
+        guard let navigationController = rootNavigationController() else {
+            return
+        }
+        
         self.defaultPresenter?.addCarToBasket(car: car)
         
-        self.navigationController?.popViewController(animated: true)
+        navigationController.popViewController(animated: true)
     }
     
-    func goToBasket(withBasket viewModel: BasketViewModel)
+    func goToBasket(withBasket basket: Basket)
     {
-        let destination = BasketViewController(withPresenter: BasketPresenter(withRouter:self, basket: viewModel))
+        guard let navigationController = rootNavigationController() else {
+            return
+        }
         
-        self.navigationController?.pushViewController(destination, animated: true)
+        let destination = BasketViewController(withPresenter: BasketPresenter(withRouter:self, basket: basket))
+        
+        navigationController.pushViewController(destination, animated: true)
+    }
+    
+    func goBackFromBasket()
+    {
+        guard let navigationController = rootNavigationController() else {
+            return
+        }
+        
+        navigationController.popViewController(animated: true)
+    }
+    
+    func goToBasketProduct(withBasket basket: Basket, withCar car: Car)
+    {
+        guard let navigationController = rootNavigationController() else {
+            return
+        }
+        
+        let destination = BasketProductViewController(withPresenter: BasketProductPresenter(withRouter:self, basket: basket, car: car))
+        
+        navigationController.pushViewController(destination, animated: true)
+    }
+    
+    func goBackFromBasketProduct()
+    {
+        guard let navigationController = rootNavigationController() else {
+            return
+        }
+        
+        navigationController.popViewController(animated: true)
+    }
+    
+    func goBackFromBasketProduct(withBasket basket: Basket)
+    {
+        guard let navigationController = rootNavigationController() else {
+            return
+        }
+        
+        navigationController.popViewController(animated: true)
+        navigationController.popViewController(animated: false)
+        
+        defaultPresenter?.setBasketCars(cars: basket.cars)
+        
+        let destination = BasketViewController(withPresenter: BasketPresenter(withRouter:self, basket: basket))
+        
+        navigationController.pushViewController(destination, animated: false)
+    }
+    
+    func goToCheckout(withBasket basket: Basket)
+    {
+        guard let navigationController = rootNavigationController() else {
+            return
+        }
+        
+        let destination = CheckoutViewController(withPresenter: CheckoutPresenter(withRouter:self, basket: basket))
+        
+        navigationController.pushViewController(destination, animated: true)
+    }
+    
+    func goBackFromCheckout()
+    {
+        guard let navigationController = rootNavigationController() else {
+            return
+        }
+        
+        navigationController.popViewController(animated: true)
+    }
+    
+    func goBackAndBuyCars()
+    {
+        guard let navigationController = rootNavigationController() else {
+            return
+        }
+        
+        navigationController.popViewController(animated: false)
+        navigationController.popViewController(animated: false)
+        
+        defaultPresenter?.clearBasketCars()
     }
     
     func goToSettings()
     {
+        guard let navigationController = rootNavigationController() else {
+            return
+        }
+        
         
     }
 }

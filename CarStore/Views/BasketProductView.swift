@@ -1,18 +1,18 @@
 //
-//  ProductView.swift
+//  BasketProductView.swift
 //  CarStore
 //
-//  Created by Kristiyan Butev on 19.09.18.
+//  Created by Kristiyan Butev on 21.09.18.
 //  Copyright © 2018 Kristiyan Butev. All rights reserved.
 //
 
 import UIKit
 
-class ProductView : UIView
+class BasketProductView : UIView
 {
     @IBOutlet private weak var imagePicture: UIImageView!
-    @IBOutlet private weak var labelTopSpeed: UILabel!
     @IBOutlet private weak var labelPrice: UILabel!
+    @IBOutlet private weak var labelTopSpeed: UILabel!
     @IBOutlet private weak var labelDescription: UILabel!
     
     override func didMoveToSuperview()
@@ -49,7 +49,7 @@ class ProductView : UIView
         labelDescription.centerXAnchor.constraint(equalTo: layoutGuide.centerXAnchor).isActive = true
     }
     
-    func update(viewModel: ProductViewModel?)
+    func update(viewModel: BasketProductViewModel?)
     {
         guard let model = viewModel else {
             return
@@ -94,14 +94,14 @@ class ProductView : UIView
 }
 
 // MARK: - Factories
-extension ProductView
+extension BasketProductView
 {
-    class func create(owner: Any) -> ProductView?
+    class func create(owner: Any) -> BasketProductView?
     {
         let bundle = Bundle.main
-        let nibName = String(describing: ProductView.self)
+        let nibName = String(describing: BasketProductView.self)
         let nib = UINib(nibName: nibName, bundle: bundle)
         
-        return nib.instantiate(withOwner: owner, options: nil).first as? ProductView
+        return nib.instantiate(withOwner: owner, options: nil).first as? BasketProductView
     }
 }

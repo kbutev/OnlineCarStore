@@ -1,20 +1,20 @@
 //
-//  ProductViewController.swift
+//  BasketProductViewController.swift
 //  CarStore
 //
-//  Created by Kristiyan Butev on 19.09.18.
+//  Created by Kristiyan Butev on 21.09.18.
 //  Copyright © 2018 Kristiyan Butev. All rights reserved.
 //
 
 import UIKit
 
-class ProductViewController : UIViewController
+class BasketProductViewController : UIViewController
 {
-    private var customView: ProductView?
+    private var customView: BasketProductView?
     
-    private var presenter: ProductPresenterDelegate? = nil
+    private var presenter: BasketProductPresenterDelegate? = nil
     
-    init(withPresenter presenter: ProductPresenter)
+    init(withPresenter presenter: BasketProductPresenter)
     {
         super.init(nibName: nil, bundle: nil)
         
@@ -48,16 +48,16 @@ class ProductViewController : UIViewController
     
     private func initInterface()
     {
-        self.customView = self.view as? ProductView
+        self.customView = self.view as? BasketProductView
         
-        navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Buy", style: .plain, target: self, action: #selector(actionBuy(_:)))
+        navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Remove", style: .plain, target: self, action: #selector(actionRemove(_:)))
     }
 }
 
 // MARK: - Delegate
-extension ProductViewController : ProductViewDelegate
+extension BasketProductViewController : BasketProductViewDelegate
 {
-    func update(model: ProductViewModel)
+    func update(model: BasketProductViewModel)
     {
         DispatchQueue.main.async {
             if model.manufacturer != nil && model.model != nil
@@ -68,14 +68,20 @@ extension ProductViewController : ProductViewDelegate
             self.customView?.update(viewModel: model)
         }
     }
+    
+    func removeCarAndGoBack(car: Car)
+    {
+        
+        navigationController?.popViewController(animated: true)
+    }
 }
 
 // MARK: - Navigation right button action
-extension ProductViewController
+extension BasketProductViewController
 {
     @objc
-    func actionBuy(_ sender: Any)
+    func actionRemove(_ sender: Any)
     {
-        presenter?.buyCar()
+        presenter?.removeCar()
     }
 }
