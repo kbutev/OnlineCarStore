@@ -70,26 +70,29 @@ extension StorePresenter : StorePresenterDelegate
     {
         initDefaultStore()
         
-        fetchCurrencyData(handler: {(data, error) -> Void in
-            if let currencies = data
+        fetchCurrencyData(handler: {[weak self] (data, error) -> Void in
+            if let presenter = self
             {
-                if let oldStore = self.store
+                if let currencies = data
                 {
-                    self.store = Store(withCars: oldStore.cars, defaultCurrency: oldStore.defaultCurrency, currencies: currencies)
-                    
-                    if let basket = self.basket
+                    if let oldStore = presenter.store
                     {
-                        self.dataSource = StoreViewDataSource(viewModel: StorePresenter.transformToStoreViewModel(basket: basket, store: self.store!))
+                        presenter.store = Store(withCars: oldStore.cars, defaultCurrency: oldStore.defaultCurrency, currencies: currencies)
+                        
+                        if let basket = presenter.basket
+                        {
+                            presenter.dataSource = StoreViewDataSource(viewModel: StorePresenter.transformToStoreViewModel(basket: basket, store: presenter.store!))
+                        }
                     }
+                    
+                    presenter.delegate?.updateStore(dataSource: presenter.dataSource)
                 }
-                
-                self.delegate?.updateStore(dataSource: self.dataSource)
-            }
-            else
-            {
-                if let err = error
+                else
                 {
-                    print("StorePresenter: network fetch failed! Error: \(err.rawValue)")
+                    if let err = error
+                    {
+                        print("StorePresenter: network fetch failed! Error: \(err.rawValue)")
+                    }
                 }
             }
         })
