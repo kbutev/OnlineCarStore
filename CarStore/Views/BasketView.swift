@@ -65,9 +65,8 @@ class BasketView : UIView
         setup()
     }
     
-    private func setup()
+    func setup()
     {
-        table.register(UITableViewCell.self, forCellReuseIdentifier: BasketView.CELL_IDENTIFIER)
         table.register(UITableViewCell.self, forCellReuseIdentifier: BasketView.CELL_IDENTIFIER)
         
         let layoutGuide = self.safeAreaLayoutGuide
@@ -143,5 +142,18 @@ extension BasketView
     func reloadData()
     {
         table.reloadData()
+    }
+}
+
+// MARK: - Factories
+extension BasketView
+{
+    class func create(owner: Any) -> BasketView?
+    {
+        let bundle = Bundle.main
+        let nibName = String(describing: BasketView.self)
+        let nib = UINib(nibName: nibName, bundle: bundle)
+        
+        return nib.instantiate(withOwner: owner, options: nil).first as? BasketView
     }
 }

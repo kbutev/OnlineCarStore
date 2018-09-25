@@ -65,9 +65,8 @@ class StoreView : UIView
         setup()
     }
     
-    private func setup()
+    func setup()
     {
-        table.register(UITableViewCell.self, forCellReuseIdentifier: StoreView.CELL_IDENTIFIER)
         table.register(UITableViewCell.self, forCellReuseIdentifier: StoreView.CELL_IDENTIFIER)
         
         let layoutGuide = self.safeAreaLayoutGuide

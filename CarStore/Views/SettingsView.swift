@@ -93,7 +93,7 @@ class SettingsView : UIView
         setup()
     }
     
-    private func setup()
+    func setup()
     {
         let layoutGuide = self.safeAreaLayoutGuide
         

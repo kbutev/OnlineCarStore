@@ -67,7 +67,7 @@ struct StoreCurrency
         self.exchangeRate = exchangeRate
     }
     
-    static func initCurrencies(withJSON json: Data, defaultCurrency: StoreCurrency) throws -> [StoreCurrency]
+    static func initCurrencies(withJSON json: Data, defaultCurrency: StoreCurrency, desiredCurrencies: [CurrencyName] = CurrencyConstants.DESIRED_CURRENCIES) throws -> [StoreCurrency]
     {
         guard let data = try JSONSerialization.jsonObject(with: json, options: []) as? [String : Any] else
         {
@@ -83,7 +83,7 @@ struct StoreCurrency
             throw StoreCurrencyError.jsonUnwrapError
         }
         
-        for desiredCurrency in CurrencyConstants.DESIRED_CURRENCIES
+        for desiredCurrency in desiredCurrencies
         {
             // Skip the construction of the default currency, we will add it manually to the array
             if desiredCurrency == defaultCurrency.name

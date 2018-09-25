@@ -68,8 +68,10 @@ extension StorePresenter : StorePresenterDelegate
 {
     func loadStore()
     {
+        // Set the default values fsor the store
         initDefaultStore()
         
+        // Fetch additional data for the currencies
         fetchCurrencyData(handler: {[weak self] (data, error) -> Void in
             if let presenter = self
             {

@@ -28,7 +28,7 @@ class CheckoutView : UIView
         setup()
     }
     
-    private func setup()
+    func setup()
     {
         let layoutGuide = self.safeAreaLayoutGuide
         
@@ -54,5 +54,18 @@ extension CheckoutView
         DispatchQueue.main.async {
             self.labelBasketDescription.text = viewModel?.basketDescription
         }
+    }
+}
+
+// MARK: - Factories
+extension CheckoutView
+{
+    class func create(owner: Any) -> CheckoutView?
+    {
+        let bundle = Bundle.main
+        let nibName = String(describing: CheckoutView.self)
+        let nib = UINib(nibName: nibName, bundle: bundle)
+        
+        return nib.instantiate(withOwner: owner, options: nil).first as? CheckoutView
     }
 }
