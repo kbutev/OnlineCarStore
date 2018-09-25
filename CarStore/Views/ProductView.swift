@@ -22,7 +22,7 @@ class ProductView : UIView
     
     func setup()
     {
-        let layoutGuide = self.safeAreaLayoutGuide
+        let layoutGuide = safeAreaLayoutGuide
         
         imagePicture.translatesAutoresizingMaskIntoConstraints = false
         imagePicture.widthAnchor.constraint(equalToConstant: 128).isActive = true

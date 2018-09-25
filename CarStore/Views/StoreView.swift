@@ -69,14 +69,15 @@ class StoreView : UIView
     {
         table.register(UITableViewCell.self, forCellReuseIdentifier: StoreView.CELL_IDENTIFIER)
         
-        let layoutGuide = self.safeAreaLayoutGuide
+        let layoutGuide = safeAreaLayoutGuide
         
         table.translatesAutoresizingMaskIntoConstraints = false
-        table.widthAnchor.constraint(equalTo: self.widthAnchor, multiplier: 1.0).isActive = true
-        table.heightAnchor.constraint(equalTo: self.heightAnchor, multiplier: 1.0).isActive = true
+        table.widthAnchor.constraint(equalTo: widthAnchor, multiplier: 1.0).isActive = true
+        table.topAnchor.constraint(equalTo: layoutGuide.topAnchor, constant: 0.0).isActive = true
+        table.bottomAnchor.constraint(equalTo: toolbar.topAnchor, constant: 0.0).isActive = true
         
         toolbar.translatesAutoresizingMaskIntoConstraints = false
-        toolbar.widthAnchor.constraint(equalTo: self.widthAnchor, multiplier: 1.0).isActive = true
+        toolbar.widthAnchor.constraint(equalTo: widthAnchor, multiplier: 1.0).isActive = true
         toolbar.bottomAnchor.constraint(equalTo: layoutGuide.bottomAnchor, constant: 0).isActive = true
         
         self.bringSubviewToFront(toolbar)

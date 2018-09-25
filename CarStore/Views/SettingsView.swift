@@ -95,7 +95,7 @@ class SettingsView : UIView
     
     func setup()
     {
-        let layoutGuide = self.safeAreaLayoutGuide
+        let layoutGuide = safeAreaLayoutGuide
         
         labelCurrency.translatesAutoresizingMaskIntoConstraints = false
         labelCurrency.widthAnchor.constraint(equalToConstant: 256.0).isActive = true

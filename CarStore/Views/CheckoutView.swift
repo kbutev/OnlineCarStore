@@ -30,7 +30,7 @@ class CheckoutView : UIView
     
     func setup()
     {
-        let layoutGuide = self.safeAreaLayoutGuide
+        let layoutGuide = safeAreaLayoutGuide
         
         labelHint.translatesAutoresizingMaskIntoConstraints = false
         labelHint.widthAnchor.constraint(equalTo: layoutGuide.widthAnchor, multiplier: 0.8).isActive = true
