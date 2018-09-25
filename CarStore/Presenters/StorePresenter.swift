@@ -54,12 +54,18 @@ class StorePresenter
     
     private func initDefaultStore()
     {
+        guard let basket = self.basket else {
+            return
+        }
+        
         let a = Car(manufacturer: "BMW", model: "x6", description: "The X6 marks BMW's first use of its new Dynamic Performance Control system, which works in unison with xDrive all-wheel drive, both being standard on the X6. DPC is a drivetrain and chassis control system that works to regulate traction and especially correct over- and understeer by actively spreading out drive forces across the rear axle.", topSpeed: 270, price: 20000, imageURL: "https://www.bmw.ca/content/dam/bmw/common/all-models/6-series/gran-turismo/2017/navigation/bmw-6series-granturismo-modelfinder-stage2-890x501.png")
         let b = Car(manufacturer: "Mercedes", model: "w203", description: "Though originally available as a sedan and a station wagon, the W203 series in 2000 debuted a fastback coupé (SportCoupé) version that, when facelifted, became the Mercedes-Benz CLC-Class. The CLC-Class remained in production until 2011 when it was replaced by a new W204 C-Class coupé for the 2012 model year.", topSpeed: 250, price: 8000, imageURL: "https://www.mercedes-benz.co.za/passengercars/_jcr_content/image.MQ6.2.2x.20180511103036.png")
         let c = Car(manufacturer: "Toyota", model: "rav4", description: "The vehicle was designed for consumers wanting a vehicle that had most of the benefits of SUVs, such as increased cargo room, higher visibility, and the option of full-time four-wheel drive, along with the maneuverability and fuel economy of a compact car. Although not all RAV4s are four-wheel-drive, RAV4 stands for \"Recreational Activity Vehicle: 4-wheel drive\".", topSpeed: 200, price: 12000, imageURL: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ2eheIR9WIlKC_7KIWJWON5umqZ0iiSk7uNoG_UhO_sh_vh2EXag")
         let d = Car(manufacturer: "Dodge", model: "FCA US", description: "Ram trucks have been named Motor Trend magazine's Truck of the Year five times; the second-generation Ram won the award in 1994, the third-generation Ram Heavy Duty won the award in 2003, the fourth-generation Ram Heavy Duty won in 2010 and the fourth-generation Ram 1500 won in 2013 and 2014.", topSpeed: 120, price: 6000, imageURL: "https://upload.wikimedia.org/wikipedia/commons/thumb/d/db/Ram_1500_Genf_2018.jpg/1920px-Ram_1500_Genf_2018.jpg")
         
         self.store = Store(withCars: [a, b, c, d], defaultCurrency: CurrencyConstants.DEFAULT_CURRENCY)
+        
+        self.dataSource = StoreViewDataSource(viewModel: StorePresenter.transformToStoreViewModel(basket: basket, store: self.store!))
     }
 }
 
@@ -95,6 +101,8 @@ extension StorePresenter : StorePresenterDelegate
                     {
                         print("StorePresenter: network fetch failed! Error: \(err.rawValue)")
                     }
+                    
+                    presenter.delegate?.updateStore(dataSource: self?.dataSource)
                 }
             }
         })
