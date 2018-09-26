@@ -114,6 +114,7 @@ extension ProductView
                         // Update interface in the main thread
                         DispatchQueue.main.async {
                             self.imagePicture.image = image
+                            self.imagePicturePreview.image = image
                         }
                     }
                     catch
@@ -132,10 +133,6 @@ extension ProductView
     @objc func actionTapImage()
     {
         imagePicturePreview.isHidden = false
-        
-        DispatchQueue.main.async {
-            self.imagePicturePreview.image = self.imagePicture.image
-        }
     }
     
     @objc func actionTapPreviewImage()
