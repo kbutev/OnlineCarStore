@@ -11,6 +11,7 @@ import UIKit
 class ProductView : UIView
 {
     @IBOutlet private weak var imagePicture: UIImageView!
+    @IBOutlet private weak var imagePicturePreview: UIImageView!
     @IBOutlet private weak var labelTopSpeed: UILabel!
     @IBOutlet private weak var labelPrice: UILabel!
     @IBOutlet private weak var scrollViewDescription: UIScrollView!
@@ -45,6 +46,12 @@ class ProductView : UIView
         imagePicture.topAnchor.constraint(equalTo: labelPrice.bottomAnchor, constant: 0.0).isActive = true
         imagePicture.centerXAnchor.constraint(equalTo: layoutGuide.centerXAnchor, constant: 0.0).isActive = true
         
+        let gesturePicture = UITapGestureRecognizer(target: self, action: #selector(actionTapImage))
+        gesturePicture.numberOfTapsRequired = 1
+        gesturePicture.numberOfTouchesRequired = 1
+        imagePicture.addGestureRecognizer(gesturePicture)
+        imagePicture.isUserInteractionEnabled = true
+        
         scrollViewDescription.translatesAutoresizingMaskIntoConstraints = false
         scrollViewDescription.widthAnchor.constraint(equalTo: layoutGuide.widthAnchor, multiplier: 0.8).isActive = true
         scrollViewDescription.topAnchor.constraint(equalTo: imagePicture.bottomAnchor, constant: 5.0).isActive = true
@@ -56,6 +63,19 @@ class ProductView : UIView
         labelDescription.topAnchor.constraint(equalTo: scrollViewDescription.topAnchor, constant: 0.0).isActive = true
         labelDescription.bottomAnchor.constraint(equalTo: scrollViewDescription.bottomAnchor, constant: 0.0).isActive = true
         labelDescription.widthAnchor.constraint(equalTo: layoutGuide.widthAnchor, multiplier: 0.8).isActive = true
+        
+        imagePicturePreview.translatesAutoresizingMaskIntoConstraints = false
+        imagePicturePreview.leadingAnchor.constraint(equalTo: layoutGuide.leadingAnchor, constant: 0.0).isActive = true
+        imagePicturePreview.trailingAnchor.constraint(equalTo: layoutGuide.trailingAnchor, constant: 0.0).isActive = true
+        imagePicturePreview.topAnchor.constraint(equalTo: layoutGuide.topAnchor, constant: 0.0).isActive = true
+        imagePicturePreview.bottomAnchor.constraint(equalTo: layoutGuide.bottomAnchor, constant: 0.0).isActive = true
+        imagePicturePreview.backgroundColor = .black
+        
+        let gesturePicturePreview = UITapGestureRecognizer(target: self, action: #selector(actionTapPreviewImage))
+        gesturePicturePreview.numberOfTapsRequired = 1
+        gesturePicturePreview.numberOfTouchesRequired = 1
+        imagePicturePreview.addGestureRecognizer(gesturePicturePreview)
+        imagePicturePreview.isUserInteractionEnabled = true
     }
 }
 
@@ -103,6 +123,24 @@ extension ProductView
                 }
             }
         }
+    }
+}
+
+// MARK: - Actions
+extension ProductView
+{
+    @objc func actionTapImage()
+    {
+        imagePicturePreview.isHidden = false
+        
+        DispatchQueue.main.async {
+            self.imagePicturePreview.image = self.imagePicture.image
+        }
+    }
+    
+    @objc func actionTapPreviewImage()
+    {
+        imagePicturePreview.isHidden = true
     }
 }
 

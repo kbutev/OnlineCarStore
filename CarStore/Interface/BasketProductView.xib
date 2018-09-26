@@ -51,11 +51,16 @@
                         </label>
                     </subviews>
                 </scrollView>
+                <imageView hidden="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Ppp-ba-NIk">
+                    <rect key="frame" x="56" y="356" width="240" height="128"/>
+                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                </imageView>
             </subviews>
             <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
             <viewLayoutGuide key="safeArea" id="vUN-kp-3ea"/>
             <connections>
                 <outlet property="imagePicture" destination="qkS-3V-I5A" id="LjU-A4-dKw"/>
+                <outlet property="imagePicturePreview" destination="Ppp-ba-NIk" id="yvT-N0-HLu"/>
                 <outlet property="labelDescription" destination="0JO-cL-xEC" id="aqg-Z9-NL6"/>
                 <outlet property="labelPrice" destination="wWe-BM-jVX" id="ptz-Qc-MTy"/>
                 <outlet property="labelTopSpeed" destination="JSV-Xi-o6f" id="g6P-oz-PSz"/>
