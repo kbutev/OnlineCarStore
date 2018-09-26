@@ -16,25 +16,6 @@ enum CurrencyName : String
     case BGN = "BGN"
 }
 
-enum CurrencySymbols : String
-{
-    case USD = "$"
-    case EUR = "€"
-    case CZK = "Kč"
-    case BGN = "Лв."
-    
-    static func symbol(for language: CurrencyName) -> CurrencySymbols
-    {
-        switch language
-        {
-        case .USD: return .USD
-        case .EUR: return .EUR
-        case .BGN: return .BGN
-        case .CZK: return .CZK
-        }
-    }
-}
-
 enum StoreCurrencyError: Error {
     case jsonUnwrapError
 }
@@ -42,21 +23,17 @@ enum StoreCurrencyError: Error {
 struct StoreCurrency
 {
     let name: CurrencyName
-    let symbol: CurrencySymbols
     let exchangeRate: Double
     
-    init(name: CurrencyName, symbol: CurrencySymbols, exchangeRate: Double)
+    init(name: CurrencyName, exchangeRate: Double)
     {
         self.name = name
-        self.symbol = symbol
         self.exchangeRate = exchangeRate
     }
     
     init(withJSON json: [String : Any], defaultCurrency: StoreCurrency, currencyName: CurrencyName) throws
     {
         self.name = currencyName
-        
-        self.symbol = CurrencySymbols.symbol(for: currencyName)
         
         let exchangeRateKey = String("\(defaultCurrency.name)\(currencyName)")
         
@@ -99,5 +76,11 @@ struct StoreCurrency
         currencies.append(defaultCurrency)
         
         return currencies
+    }
+    
+    var symbol : CurrencySymbol {
+        get {
+            return CurrencySymbol(name)
+        }
     }
 }

@@ -13,6 +13,7 @@ class ProductView : UIView
     @IBOutlet private weak var imagePicture: UIImageView!
     @IBOutlet private weak var labelTopSpeed: UILabel!
     @IBOutlet private weak var labelPrice: UILabel!
+    @IBOutlet private weak var scrollViewDescription: UIScrollView!
     @IBOutlet private weak var labelDescription: UILabel!
     
     override func didMoveToSuperview()
@@ -24,29 +25,37 @@ class ProductView : UIView
     {
         let layoutGuide = safeAreaLayoutGuide
         
-        imagePicture.translatesAutoresizingMaskIntoConstraints = false
-        imagePicture.widthAnchor.constraint(equalToConstant: 128).isActive = true
-        imagePicture.heightAnchor.constraint(equalToConstant: 128).isActive = true
-        imagePicture.topAnchor.constraint(equalTo: layoutGuide.topAnchor, constant: 10.0).isActive = true
-        imagePicture.leadingAnchor.constraint(equalTo: layoutGuide.leadingAnchor, constant: 25.0).isActive = true
-        
         labelPrice.translatesAutoresizingMaskIntoConstraints = false
         labelPrice.widthAnchor.constraint(equalToConstant: 196).isActive = true
         labelPrice.heightAnchor.constraint(equalToConstant: 32).isActive = true
-        labelPrice.topAnchor.constraint(equalTo: layoutGuide.topAnchor, constant: 10.0).isActive = true
-        labelPrice.leadingAnchor.constraint(equalTo: imagePicture.trailingAnchor, constant: 2.0).isActive = true
+        labelPrice.topAnchor.constraint(equalTo: layoutGuide.topAnchor, constant: 0.0).isActive = true
+        labelPrice.leadingAnchor.constraint(equalTo: layoutGuide.leadingAnchor, constant: 10.0).isActive = true
+        labelPrice.textAlignment = .left
         
         labelTopSpeed.translatesAutoresizingMaskIntoConstraints = false
         labelTopSpeed.widthAnchor.constraint(equalToConstant: 196).isActive = true
         labelTopSpeed.heightAnchor.constraint(equalToConstant: 32).isActive = true
-        labelTopSpeed.topAnchor.constraint(equalTo: labelPrice.bottomAnchor, constant: 10.0).isActive = true
-        labelTopSpeed.leadingAnchor.constraint(equalTo: imagePicture.trailingAnchor, constant: 2.0).isActive = true
+        labelTopSpeed.topAnchor.constraint(equalTo: layoutGuide.topAnchor, constant: 0.0).isActive = true
+        labelTopSpeed.trailingAnchor.constraint(equalTo: layoutGuide.trailingAnchor, constant: -10.0).isActive = true
+        labelTopSpeed.textAlignment = .right
         
-        labelDescription.numberOfLines = 15
+        imagePicture.translatesAutoresizingMaskIntoConstraints = false
+        imagePicture.widthAnchor.constraint(equalToConstant: 256).isActive = true
+        imagePicture.heightAnchor.constraint(equalToConstant: 128).isActive = true
+        imagePicture.topAnchor.constraint(equalTo: labelPrice.bottomAnchor, constant: 0.0).isActive = true
+        imagePicture.centerXAnchor.constraint(equalTo: layoutGuide.centerXAnchor, constant: 0.0).isActive = true
+        
+        scrollViewDescription.translatesAutoresizingMaskIntoConstraints = false
+        scrollViewDescription.widthAnchor.constraint(equalTo: layoutGuide.widthAnchor, multiplier: 0.8).isActive = true
+        scrollViewDescription.topAnchor.constraint(equalTo: imagePicture.bottomAnchor, constant: 5.0).isActive = true
+        scrollViewDescription.bottomAnchor.constraint(equalTo: layoutGuide.bottomAnchor, constant: -15.0).isActive = true
+        scrollViewDescription.centerXAnchor.constraint(equalTo: layoutGuide.centerXAnchor).isActive = true
+        
+        labelDescription.numberOfLines = 100
         labelDescription.translatesAutoresizingMaskIntoConstraints = false
+        labelDescription.topAnchor.constraint(equalTo: scrollViewDescription.topAnchor, constant: 0.0).isActive = true
+        labelDescription.bottomAnchor.constraint(equalTo: scrollViewDescription.bottomAnchor, constant: 0.0).isActive = true
         labelDescription.widthAnchor.constraint(equalTo: layoutGuide.widthAnchor, multiplier: 0.8).isActive = true
-        labelDescription.topAnchor.constraint(equalTo: imagePicture.bottomAnchor, constant: 0.0).isActive = true
-        labelDescription.centerXAnchor.constraint(equalTo: layoutGuide.centerXAnchor).isActive = true
     }
 }
 

@@ -26,9 +26,9 @@ class StoreModelTests: XCTestCase {
         // This is an example of a functional test case.
         // Use XCTAssert and related functions to verify your tests produce the correct results.
         
-        let a = StoreCurrency(name: .USD, symbol: .USD, exchangeRate: 1.0)
-        let b = StoreCurrency(name: .BGN, symbol: .BGN, exchangeRate: 0.5)
-        let c = StoreCurrency(name: .EUR, symbol: .EUR, exchangeRate: 0.9)
+        let a = StoreCurrency(name: .USD, exchangeRate: 1.0)
+        let b = StoreCurrency(name: .BGN, exchangeRate: 0.5)
+        let c = StoreCurrency(name: .EUR, exchangeRate: 0.9)
         
         let store = Store(withCars: [], defaultCurrency: a, currencies: [a, b, c])
         

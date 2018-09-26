@@ -56,15 +56,11 @@ struct Basket
     
     func getTotalPriceWithSymbol(forCurrency currency: StoreCurrency) -> String?
     {
-        let price = getTotalPrice()
-        
-        let formatter = NumberFormatter()
-        
-        formatter.allowsFloats = false
-        
-        if var result = formatter.string(from: NSNumber(value: Double(price) * currency.exchangeRate))
+        if let number = CurrencyConverter(value: getTotalPrice(), exchangeRate: currency.exchangeRate).value
         {
-            result.append(currency.symbol.rawValue)
+            var result = currency.symbol.value.prefix
+            result.append(number)
+            result.append(currency.symbol.value.suffix)
             
             return result
         }

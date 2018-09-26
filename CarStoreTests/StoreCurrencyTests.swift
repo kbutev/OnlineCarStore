@@ -24,7 +24,7 @@ class StoreCurrencyTests: XCTestCase
 
     func testInitWithValidJSON1() throws
     {
-        let defaultCurrency = StoreCurrency(name: .USD, symbol: .USD, exchangeRate: 1.0)
+        let defaultCurrency = StoreCurrency(name: .USD, exchangeRate: 1.0)
         let desiredCurrencies : [CurrencyName] = [.EUR, .BGN]
         
         let a = try JSONSerialization.data(withJSONObject: ["quotes" : ["USDEUR" : 0.9, "USDBGN" : 2.0]], options: .prettyPrinted)
@@ -52,7 +52,7 @@ class StoreCurrencyTests: XCTestCase
     
     func testInitWithValidJSON2() throws
     {
-        let defaultCurrency = StoreCurrency(name: .EUR, symbol: .EUR, exchangeRate: 1.0)
+        let defaultCurrency = StoreCurrency(name: .EUR, exchangeRate: 1.0)
         let desiredCurrencies : [CurrencyName] = [.USD, .BGN]
         
         let a = try JSONSerialization.data(withJSONObject: ["quotes" : ["EURUSD" : 1.1, "EURBGN" : 2.0]], options: .prettyPrinted)
@@ -80,7 +80,7 @@ class StoreCurrencyTests: XCTestCase
     
     func testInitWithInvalidJSON1() throws
     {
-        let defaultCurrency = StoreCurrency(name: .USD, symbol: .USD, exchangeRate: 1.0)
+        let defaultCurrency = StoreCurrency(name: .USD, exchangeRate: 1.0)
         let desiredCurrencies : [CurrencyName] = [.EUR]
         
         let a = try JSONSerialization.data(withJSONObject: [1], options: .prettyPrinted)
@@ -95,7 +95,7 @@ class StoreCurrencyTests: XCTestCase
     
     func testInitWithInvalidJSON2() throws
     {
-        let defaultCurrency = StoreCurrency(name: .USD, symbol: .USD, exchangeRate: 1.0)
+        let defaultCurrency = StoreCurrency(name: .USD, exchangeRate: 1.0)
         let desiredCurrencies : [CurrencyName] = [.EUR, .BGN]
         
         let a = try JSONSerialization.data(withJSONObject: ["quotes" : ["USDEUR" : 1.1]], options: .prettyPrinted)
