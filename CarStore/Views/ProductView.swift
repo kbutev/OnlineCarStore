@@ -69,7 +69,6 @@ class ProductView : UIView
         imagePicturePreview.trailingAnchor.constraint(equalTo: layoutGuide.trailingAnchor, constant: 0.0).isActive = true
         imagePicturePreview.topAnchor.constraint(equalTo: layoutGuide.topAnchor, constant: 0.0).isActive = true
         imagePicturePreview.bottomAnchor.constraint(equalTo: layoutGuide.bottomAnchor, constant: 0.0).isActive = true
-        imagePicturePreview.backgroundColor = .black
         
         let gesturePicturePreview = UITapGestureRecognizer(target: self, action: #selector(actionTapPreviewImage))
         gesturePicturePreview.numberOfTapsRequired = 1
@@ -109,12 +108,29 @@ extension ProductView
                 DispatchQueue.global(qos: .background).async {
                     do {
                         let data = try Data(contentsOf: url)
-                        let image = UIImage(data: data)
+                        
+                        guard let pngImage = UIImage(data: data) else
+                        {
+                            return
+                        }
+                        
+                        guard let image = self.convertToJPG(image: pngImage) else
+                        {
+                            return
+                        }
                         
                         // Update interface in the main thread
                         DispatchQueue.main.async {
                             self.imagePicture.image = image
                             self.imagePicturePreview.image = image
+                            
+                            // We are going to fill the background if @imagePicturePreview with
+                            // pattern color taken from @image
+                            if let dummyImage = self.resizeImage(image: image, newWidth: 1)
+                            {
+                                let colorWithPattern = UIColor(patternImage: dummyImage)
+                                self.imagePicturePreview.backgroundColor = colorWithPattern
+                            }
                         }
                     }
                     catch
@@ -151,5 +167,35 @@ extension ProductView
         let nib = UINib(nibName: nibName, bundle: bundle)
         
         return nib.instantiate(withOwner: owner, options: nil).first as? ProductView
+    }
+}
+
+// MARK: - Utilities
+extension ProductView
+{
+    func convertToJPG(image: UIImage) -> UIImage?
+    {
+        if let data = image.jpegData(compressionQuality: 1.0)
+        {
+            return UIImage(data: data)
+        }
+        
+        return nil
+    }
+    
+    func resizeImage(image: UIImage, newWidth: CGFloat) -> UIImage?
+    {
+        let scale = newWidth / image.size.width
+        let newHeight = image.size.height * scale
+        
+        UIGraphicsBeginImageContext(CGSize(width: newWidth, height: newHeight))
+        
+        image.draw(in: CGRect(x: 0, y: 0, width: newWidth, height: newHeight))
+        
+        let newImage = UIGraphicsGetImageFromCurrentImageContext()
+        
+        UIGraphicsEndImageContext()
+        
+        return newImage
     }
 }
