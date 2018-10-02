@@ -39,7 +39,7 @@ class BasketProductPresenter
         self.viewModel = BasketProductViewModel(manufacturer: car.manufacturer,
                                                 model: car.model,
                                                 description: car.description,
-                                                topSpeed: String("\(car.topSpeed)km/h"),
+                                                engine: car.engine,
                                                 price: car.getPriceWithSymbol(forCurrency: basket.defaultCurrency),
                                                 imageURL: car.imageURL)
     }

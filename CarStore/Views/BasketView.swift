@@ -79,8 +79,9 @@ class BasketView : UIView
         toolbar.translatesAutoresizingMaskIntoConstraints = false
         toolbar.widthAnchor.constraint(equalTo: widthAnchor, multiplier: 1.0).isActive = true
         toolbar.bottomAnchor.constraint(equalTo: layoutGuide.bottomAnchor, constant: 0).isActive = true
+        toolbar.items?.first?.tintColor = window?.tintColor
         
-        self.bringSubviewToFront(toolbar)
+        bringSubviewToFront(toolbar)
     }
 }
 

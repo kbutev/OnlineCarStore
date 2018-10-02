@@ -29,19 +29,19 @@ class CheckoutPresenter
     private var basket: Basket?
     private var viewModel: CheckoutViewModel?
     
-    required init(withRouter router: Router = Router.singleton, basket: Basket)
+    required init(withRouter router: Router = Router.singleton, basket: Basket, applicationTheme: ColorTheme = .blue)
     {
         self.router = router
         self.basket = basket
         
-        self.viewModel = CheckoutPresenter.transformToCheckoutViewModel(basket: basket)
+        self.viewModel = CheckoutPresenter.transformToCheckoutViewModel(basket: basket, applicationTheme: applicationTheme)
     }
 }
 
 // MARK: - Transformations
 extension CheckoutPresenter
 {
-    class func transformToCheckoutViewModel(basket: Basket) -> CheckoutViewModel?
+    class func transformToCheckoutViewModel(basket: Basket, applicationTheme: ColorTheme) -> CheckoutViewModel?
     {
         var carDescriptions: [String] = []
         

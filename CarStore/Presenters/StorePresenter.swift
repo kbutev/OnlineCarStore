@@ -10,6 +10,7 @@ import UIKit
 
 protocol StoreViewDelegate: AnyObject
 {
+    func updateTheme(theme: ColorTheme?)
     func updateStore(dataSource: StoreViewDataSource?)
     func updateBasket(viewModel: BasketViewModel?)
 }
@@ -24,6 +25,7 @@ protocol StorePresenterDelegate: AnyObject
     func removeCarFromBasket(car: Car)
     
     func setDefaultCurrency(defaultCurrency: StoreCurrency)
+    func setApplicationTheme(applicationTheme: ColorTheme)
     
     func goToProductScene(atTableIndex index: IndexPath)
     func goToBasket()
@@ -39,13 +41,15 @@ class StorePresenter
     
     private var store: Store?
     private var basket: Basket?
+    private var applicationTheme: ColorTheme
     
     private let session = URLSession(configuration: URLSessionConfiguration.default)
     
-    required init(withRouter router: Router = Router.singleton, withBasket basket: Basket = Basket(defaultCurrency: CurrencyConstants.DEFAULT_CURRENCY))
+    required init(withRouter router: Router = Router.singleton, withBasket basket: Basket = Basket(defaultCurrency: CurrencyConstants.DEFAULT_CURRENCY), applicationTheme: ColorTheme = .blue)
     {
         self.router = router
         self.basket = basket
+        self.applicationTheme = applicationTheme
     }
     
     deinit {
@@ -58,12 +62,7 @@ class StorePresenter
             return
         }
         
-        let a = Car(manufacturer: "BMW", model: "x6", description: "The X6 marks BMW's first use of its new Dynamic Performance Control system, which works in unison with xDrive all-wheel drive, both being standard on the X6. DPC is a drivetrain and chassis control system that works to regulate traction and especially correct over- and understeer by actively spreading out drive forces across the rear axle.", topSpeed: 270, price: 20000, imageURL: "https://www.bmw.ca/content/dam/bmw/common/all-models/6-series/gran-turismo/2017/navigation/bmw-6series-granturismo-modelfinder-stage2-890x501.png")
-        let b = Car(manufacturer: "Mercedes", model: "w203", description: "Though originally available as a sedan and a station wagon, the W203 series in 2000 debuted a fastback coupé (SportCoupé) version that, when facelifted, became the Mercedes-Benz CLC-Class. The CLC-Class remained in production until 2011 when it was replaced by a new W204 C-Class coupé for the 2012 model year.", topSpeed: 250, price: 8000, imageURL: "https://www.mercedes-benz.co.za/passengercars/_jcr_content/image.MQ6.2.2x.20180511103036.png")
-        let c = Car(manufacturer: "Toyota", model: "rav4", description: "The vehicle was designed for consumers wanting a vehicle that had most of the benefits of SUVs, such as increased cargo room, higher visibility, and the option of full-time four-wheel drive, along with the maneuverability and fuel economy of a compact car. Although not all RAV4s are four-wheel-drive, RAV4 stands for \"Recreational Activity Vehicle: 4-wheel drive\".", topSpeed: 200, price: 12000, imageURL: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ2eheIR9WIlKC_7KIWJWON5umqZ0iiSk7uNoG_UhO_sh_vh2EXag")
-        let d = Car(manufacturer: "Dodge", model: "FCA US", description: "Ram trucks have been named Motor Trend magazine's Truck of the Year five times; the second-generation Ram won the award in 1994, the third-generation Ram Heavy Duty won the award in 2003, the fourth-generation Ram Heavy Duty won in 2010 and the fourth-generation Ram 1500 won in 2013 and 2014. Ram trucks have been named Motor Trend magazine's Truck of the Year five times; the second-generation Ram won the award in 1994, the third-generation Ram Heavy Duty won the award in 2003, the fourth-generation Ram Heavy Duty won in 2010 and the fourth-generation Ram 1500 won in 2013 and 2014.", topSpeed: 120, price: 6000, imageURL: "https://upload.wikimedia.org/wikipedia/commons/thumb/d/db/Ram_1500_Genf_2018.jpg/1920px-Ram_1500_Genf_2018.jpg")
-        
-        self.store = Store(withCars: [a, b, c, d], defaultCurrency: CurrencyConstants.DEFAULT_CURRENCY)
+        self.store = Store(withCars: [], defaultCurrency: CurrencyConstants.DEFAULT_CURRENCY)
         
         self.dataSource = StoreViewDataSource(viewModel: StorePresenter.transformToStoreViewModel(basket: basket, store: self.store!))
     }
@@ -76,6 +75,36 @@ extension StorePresenter : StorePresenterDelegate
     {
         // Set the default values fsor the store
         initDefaultStore()
+        
+        // Fetch additional data for the cars
+        fetchCarStoreData(handler: {[weak self] (data, error) -> Void in
+            if let presenter = self
+            {
+                if let cars = data
+                {
+                    if let oldStore = presenter.store
+                    {
+                        presenter.store = Store(withCars: cars, defaultCurrency: oldStore.defaultCurrency, currencies: oldStore.currencies)
+                        
+                        if let basket = presenter.basket
+                        {
+                            presenter.dataSource = StoreViewDataSource(viewModel: StorePresenter.transformToStoreViewModel(basket: basket, store: presenter.store!))
+                        }
+                        
+                        presenter.delegate?.updateStore(dataSource: presenter.dataSource)
+                    }
+                }
+                else
+                {
+                    if let err = error
+                    {
+                        print("StorePresenter: network fetch failed! Error: \(err.rawValue)")
+                    }
+                    
+                    presenter.delegate?.updateStore(dataSource: self?.dataSource)
+                }
+            }
+        })
         
         // Fetch additional data for the currencies
         fetchCurrencyData(handler: {[weak self] (data, error) -> Void in
@@ -91,9 +120,9 @@ extension StorePresenter : StorePresenterDelegate
                         {
                             presenter.dataSource = StoreViewDataSource(viewModel: StorePresenter.transformToStoreViewModel(basket: basket, store: presenter.store!))
                         }
+                        
+                        presenter.delegate?.updateStore(dataSource: presenter.dataSource)
                     }
-                    
-                    presenter.delegate?.updateStore(dataSource: presenter.dataSource)
                 }
                 else
                 {
@@ -106,6 +135,9 @@ extension StorePresenter : StorePresenterDelegate
                 }
             }
         })
+        
+        // Update theme
+        delegate?.updateTheme(theme: applicationTheme)
     }
     
     func clearBasketCars()
@@ -117,7 +149,7 @@ extension StorePresenter : StorePresenterDelegate
         self.basket!.cars = []
         
         // Construct the view model and pass it to view delegate
-        if let viewModel = StorePresenter.transformToBasketViewModel(basket: basket!)
+        if let viewModel = StorePresenter.transformToBasketViewModel(basket: basket!, applicationTheme: applicationTheme)
         {
             self.delegate?.updateBasket(viewModel: viewModel)
         }
@@ -132,7 +164,7 @@ extension StorePresenter : StorePresenterDelegate
         self.basket!.cars = cars
         
         // Construct the view model and pass it to view delegate
-        if let viewModel = StorePresenter.transformToBasketViewModel(basket: basket!)
+        if let viewModel = StorePresenter.transformToBasketViewModel(basket: basket!, applicationTheme: applicationTheme)
         {
             self.delegate?.updateBasket(viewModel: viewModel)
         }
@@ -148,7 +180,7 @@ extension StorePresenter : StorePresenterDelegate
         basket!.add(car)
         
         // Construct the view model and pass it to view delegate
-        if let viewModel = StorePresenter.transformToBasketViewModel(basket: basket!)
+        if let viewModel = StorePresenter.transformToBasketViewModel(basket: basket!, applicationTheme: applicationTheme)
         {
             self.delegate?.updateBasket(viewModel: viewModel)
         }
@@ -164,7 +196,7 @@ extension StorePresenter : StorePresenterDelegate
         basket!.remove(car)
         
         // Construct the view model and pass it to view delegate
-        if let viewModel = StorePresenter.transformToBasketViewModel(basket: basket!)
+        if let viewModel = StorePresenter.transformToBasketViewModel(basket: basket!, applicationTheme: applicationTheme)
         {
             self.delegate?.updateBasket(viewModel: viewModel)
         }
@@ -186,8 +218,19 @@ extension StorePresenter : StorePresenterDelegate
         
         if let basket = self.basket
         {
-            self.delegate?.updateBasket(viewModel: StorePresenter.transformToBasketViewModel(basket: basket))
+            self.delegate?.updateBasket(viewModel: StorePresenter.transformToBasketViewModel(basket: basket, applicationTheme: applicationTheme))
         }
+        
+        print("StorePresenter: application default currency has been changed to \(defaultCurrency.name.rawValue)")
+    }
+    
+    func setApplicationTheme(applicationTheme: ColorTheme)
+    {
+        self.applicationTheme = applicationTheme
+        
+        delegate?.updateTheme(theme: applicationTheme)
+        
+        print("StorePresenter: application theme has been changed to \(applicationTheme.rawValue)")
     }
     
     func goToProductScene(atTableIndex index: IndexPath)
@@ -217,14 +260,14 @@ extension StorePresenter : StorePresenterDelegate
             return
         }
         
-        router.goToSettings(defaultCurrency: store.defaultCurrency, currencies: store.currencies)
+        router.goToSettings(defaultCurrency: store.defaultCurrency, currencies: store.currencies, applicationTheme: applicationTheme)
     }
 }
 
 // MARK: - Transformations
 extension StorePresenter
 {
-    class func transformToBasketViewModel(basket: Basket) -> BasketViewModel?
+    class func transformToBasketViewModel(basket: Basket, applicationTheme: ColorTheme) -> BasketViewModel?
     {
         var carDescriptions: [String] = []
         
@@ -287,29 +330,29 @@ extension StorePresenter
     }
 }
 
-// MARK: - Networking
+// MARK: - Networking - currency data
 extension StorePresenter
 {
-    static let HTTP_TIMEOUT : Double = 5
+    static let CURRENCY_HTTP_TIMEOUT : Double = 5
     
-    class func getAPIKey() -> String
+    class func getCurrencyAPIKey() -> String
     {
         return "2a40b989f394219b9235743c7d8cbd15"
     }
     
-    class func getAPIURL() -> URL?
+    class func getCurrencyAPIURL() -> URL?
     {
-        return URL(string: "http://apilayer.net/api/live?access_key=" + StorePresenter.getAPIKey())
+        return URL(string: "http://apilayer.net/api/live?access_key=" + StorePresenter.getCurrencyAPIKey())
     }
     
     func fetchCurrencyData(handler: @escaping([StoreCurrency]?, NetworkError?)->Void)
     {
-        guard let url = StorePresenter.getAPIURL() else
+        guard let url = StorePresenter.getCurrencyAPIURL() else
         {
             return
         }
         
-        let request = URLRequest(url: url, cachePolicy: URLRequest.CachePolicy.reloadIgnoringCacheData, timeoutInterval: StorePresenter.HTTP_TIMEOUT)
+        let request = URLRequest(url: url, cachePolicy: URLRequest.CachePolicy.reloadIgnoringCacheData, timeoutInterval: StorePresenter.CURRENCY_HTTP_TIMEOUT)
         
         session.dataTask(with: request, completionHandler: { (data, response, error) in
             if let json = data
@@ -317,6 +360,46 @@ extension StorePresenter
                 do
                 {
                     let result = try StoreCurrency.initCurrencies(withJSON: json, defaultCurrency: CurrencyConstants.DEFAULT_CURRENCY)
+                    handler(result, nil)
+                }
+                catch
+                {
+                    handler(nil, NetworkError.BAD_RESPONSE)
+                }
+            }
+            else
+            {
+                handler(nil, NetworkError.HTTP_ERROR)
+            }
+        }).resume()
+    }
+}
+
+// MARK: - Networking - car store data
+extension StorePresenter
+{
+    static let CAR_STORE_HTTP_TIMEOUT : Double = 5
+    
+    class func getCarStoreAPIURL() -> URL?
+    {
+        return URL(string: "https://www.carqueryapi.com/api/0.3/?cmd=getTrims&year=2015")
+    }
+    
+    func fetchCarStoreData(handler: @escaping([Car]?, NetworkError?)->Void)
+    {
+        guard let url = StorePresenter.getCarStoreAPIURL() else
+        {
+            return
+        }
+        
+        let request = URLRequest(url: url, cachePolicy: URLRequest.CachePolicy.reloadIgnoringCacheData, timeoutInterval: StorePresenter.CAR_STORE_HTTP_TIMEOUT)
+        
+        session.dataTask(with: request, completionHandler: { (data, response, error) in
+            if let json = data
+            {
+                do
+                {
+                    let result = try Car.initCars(withJSON: json)
                     handler(result, nil)
                 }
                 catch

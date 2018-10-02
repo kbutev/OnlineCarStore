@@ -46,7 +46,12 @@ struct StoreCurrency
     
     static func initCurrencies(withJSON json: Data, defaultCurrency: StoreCurrency, desiredCurrencies: [CurrencyName] = CurrencyConstants.DESIRED_CURRENCIES) throws -> [StoreCurrency]
     {
-        guard let data = try JSONSerialization.jsonObject(with: json, options: []) as? [String : Any] else
+        guard let jsonUnwrapped = try? JSONSerialization.jsonObject(with: json, options: []) else
+        {
+            throw StoreCurrencyError.jsonUnwrapError
+        }
+        
+        guard let data = jsonUnwrapped as? [String : Any] else
         {
             throw StoreCurrencyError.jsonUnwrapError
         }

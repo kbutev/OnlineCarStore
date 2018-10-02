@@ -64,9 +64,19 @@ extension SettingsViewController : SettingsViewDelegate
         customView?.updateCurrencyPicker(dataSource: dataSource, delegate: delegate)
     }
     
+    func updateThemesPicker(dataSource: SettingsThemesDataSource?, delegate: SettingsThemesDelegate?)
+    {
+        customView?.updateThemesPicker(dataSource: dataSource, delegate: delegate)
+    }
+    
     func selectCurrencyPickerValue(row: Int)
     {
         customView?.selectCurrencyPickerValue(row: row)
+    }
+    
+    func selectThemePickerValue(row: Int)
+    {
+        customView?.selectThemePickerValue(row: row)
     }
 }
 
@@ -76,6 +86,15 @@ extension SettingsViewController : SettingsCurrencyViewDelegate
     func didSelectCurrency(currencyName: CurrencyName)
     {
         presenter?.didSelectCurrency(currencyName: currencyName)
+    }
+}
+
+// MARK: - Delegate
+extension SettingsViewController : SettingsThemesViewDelegate
+{
+    func didSelectTheme(theme: ColorTheme)
+    {
+        presenter?.didSelectTheme(theme: theme)
     }
 }
 

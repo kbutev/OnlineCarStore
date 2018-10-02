@@ -21,8 +21,8 @@ protocol RouterProtocol : AnyObject
     
     func goBackAndBuyCars()
     
-    func goToSettings(defaultCurrency: StoreCurrency, currencies: [StoreCurrency])
-    func goBackFromSettings(selectedCurrency: StoreCurrency)
+    func goToSettings(defaultCurrency: StoreCurrency, currencies: [StoreCurrency], applicationTheme: ColorTheme)
+    func goBackFromSettings(selectedCurrency: StoreCurrency, applicationTheme: ColorTheme)
 }
 
 class Router
@@ -52,7 +52,7 @@ class Router
         self.defaultPresenter = presenter
         
         // Create default controller and push it to navigation as a root controller
-        let viewController = StoreViewController(withPresenter: presenter)
+        let viewController = StoreViewController(withWindow: window, withPresenter: presenter)
         self.defaultViewController = viewController
         navigationController.pushViewController(viewController, animated: false)
         
@@ -161,24 +161,25 @@ extension Router : RouterProtocol
         defaultPresenter?.clearBasketCars()
     }
     
-    func goToSettings(defaultCurrency: StoreCurrency, currencies: [StoreCurrency])
+    func goToSettings(defaultCurrency: StoreCurrency, currencies: [StoreCurrency], applicationTheme: ColorTheme)
     {
         guard let navigationController = rootNavigationController() else {
             return
         }
         
-        let destination = SettingsViewController(withPresenter: SettingsPresenter(withRouter:self, defaultCurrency: defaultCurrency, currencies: currencies))
+        let destination = SettingsViewController(withPresenter: SettingsPresenter(withRouter:self, defaultCurrency: defaultCurrency, currencies: currencies, applicationTheme: applicationTheme))
         
         navigationController.pushViewController(destination, animated: true)
     }
     
-    func goBackFromSettings(selectedCurrency: StoreCurrency)
+    func goBackFromSettings(selectedCurrency: StoreCurrency, applicationTheme: ColorTheme)
     {
         guard let navigationController = rootNavigationController() else {
             return
         }
         
         defaultPresenter?.setDefaultCurrency(defaultCurrency: selectedCurrency)
+        defaultPresenter?.setApplicationTheme(applicationTheme: applicationTheme)
         
         navigationController.popViewController(animated: true)
     }

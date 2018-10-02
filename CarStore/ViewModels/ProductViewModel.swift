@@ -13,17 +13,25 @@ struct ProductViewModel
     let manufacturer: String?
     let model: String?
     let description: String?
-    let topSpeed: String?
+    let engine: String?
     let price: String?
     let imageURL: String?
     
-    init(manufacturer: String?, model: String?, description: String?, topSpeed: String?, price: String?, imageURL: String?)
+    init(manufacturer: String?, model: String?, description: String?, engine: String?, price: String?, imageURL: String?)
     {
         self.manufacturer = manufacturer
         self.model = model
         self.description = description
-        self.topSpeed = topSpeed
+        self.engine = engine
         self.price = price
-        self.imageURL = imageURL
+        
+        if imageURL == nil && manufacturer != nil
+        {
+            self.imageURL = CarPhotos.getCarImageURL(forManufacturer: manufacturer!)
+        }
+        else
+        {
+            self.imageURL = imageURL
+        }
     }
 }

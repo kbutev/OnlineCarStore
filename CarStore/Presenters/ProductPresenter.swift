@@ -48,7 +48,7 @@ extension ProductPresenter
         return ProductViewModel(manufacturer: car.manufacturer,
                                 model: car.model,
                                 description: car.description,
-                                topSpeed: String("\(car.topSpeed)km/h"),
+                                engine: car.engine,
                                 price: car.getPriceWithSymbol(forCurrency: defaultCurrency),
                                 imageURL: car.imageURL)
     }

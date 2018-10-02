@@ -46,6 +46,8 @@
 		B84E830C2154E45200318EDD /* BasketProductView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B84E830B2154E45200318EDD /* BasketProductView.swift */; };
 		B84E830E2154E46400318EDD /* BasketProductView.xib in Resources */ = {isa = PBXBuildFile; fileRef = B84E830D2154E46400318EDD /* BasketProductView.xib */; };
 		B84E83102154E58B00318EDD /* BasketProductViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B84E830F2154E58B00318EDD /* BasketProductViewController.swift */; };
+		B8595D1421625FA500214A30 /* CarPhotos.swift in Sources */ = {isa = PBXBuildFile; fileRef = B8595D1321625FA500214A30 /* CarPhotos.swift */; };
+		B8595D16216262B700214A30 /* ColorThemes.swift in Sources */ = {isa = PBXBuildFile; fileRef = B8595D15216262B700214A30 /* ColorThemes.swift */; };
 		B873575721528B4F00D21D1F /* ProductView.xib in Resources */ = {isa = PBXBuildFile; fileRef = B873575621528B4F00D21D1F /* ProductView.xib */; };
 		B873575921528B5E00D21D1F /* BasketView.xib in Resources */ = {isa = PBXBuildFile; fileRef = B873575821528B5E00D21D1F /* BasketView.xib */; };
 		B873575B21528B6800D21D1F /* SettingsView.xib in Resources */ = {isa = PBXBuildFile; fileRef = B873575A21528B6800D21D1F /* SettingsView.xib */; };
@@ -128,6 +130,8 @@
 		B84E830B2154E45200318EDD /* BasketProductView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BasketProductView.swift; sourceTree = "<group>"; };
 		B84E830D2154E46400318EDD /* BasketProductView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = BasketProductView.xib; sourceTree = "<group>"; };
 		B84E830F2154E58B00318EDD /* BasketProductViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BasketProductViewController.swift; sourceTree = "<group>"; };
+		B8595D1321625FA500214A30 /* CarPhotos.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CarPhotos.swift; sourceTree = "<group>"; };
+		B8595D15216262B700214A30 /* ColorThemes.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ColorThemes.swift; sourceTree = "<group>"; };
 		B873575621528B4F00D21D1F /* ProductView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ProductView.xib; sourceTree = "<group>"; };
 		B873575821528B5E00D21D1F /* BasketView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = BasketView.xib; sourceTree = "<group>"; };
 		B873575A21528B6800D21D1F /* SettingsView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = SettingsView.xib; sourceTree = "<group>"; };
@@ -339,6 +343,8 @@
 			children = (
 				B844566A2152610B009F172C /* NetworkErrors.swift */,
 				B844566E21526126009F172C /* CurrencyConstants.swift */,
+				B8595D1321625FA500214A30 /* CarPhotos.swift */,
+				B8595D15216262B700214A30 /* ColorThemes.swift */,
 			);
 			path = Utilities;
 			sourceTree = "<group>";
@@ -623,6 +629,7 @@
 				B844567821526A3F009F172C /* Basket.swift in Sources */,
 				B844564721526020009F172C /* BasketViewController.swift in Sources */,
 				B844568221526B94009F172C /* ProductViewModel.swift in Sources */,
+				B8595D1421625FA500214A30 /* CarPhotos.swift in Sources */,
 				B844565321526065009F172C /* CheckoutPresenter.swift in Sources */,
 				B84456492152602C009F172C /* SettingsViewController.swift in Sources */,
 				B844565B215260B3009F172C /* StoreViewModel.swift in Sources */,
@@ -641,6 +648,7 @@
 				B844567E21526B6D009F172C /* Car.swift in Sources */,
 				B84E830A2154E44600318EDD /* BasketProductViewModel.swift in Sources */,
 				B844565F215260C7009F172C /* SettingsViewModel.swift in Sources */,
+				B8595D16216262B700214A30 /* ColorThemes.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -805,17 +813,17 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = XU7WQ382FC;
+				DEVELOPMENT_TEAM = GM565V9649;
 				INFOPLIST_FILE = CarStore/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = test.CarStore;
+				PRODUCT_BUNDLE_IDENTIFIER = mfw.CarStore;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 4.2;
-				TARGETED_DEVICE_FAMILY = "1,2";
+				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Debug;
 		};
@@ -825,17 +833,17 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = XU7WQ382FC;
+				DEVELOPMENT_TEAM = GM565V9649;
 				INFOPLIST_FILE = CarStore/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = test.CarStore;
+				PRODUCT_BUNDLE_IDENTIFIER = mfw.CarStore;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 4.2;
-				TARGETED_DEVICE_FAMILY = "1,2";
+				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Release;
 		};
@@ -846,7 +854,7 @@
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = XU7WQ382FC;
+				DEVELOPMENT_TEAM = GM565V9649;
 				INFOPLIST_FILE = CarStoreTests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -868,7 +876,7 @@
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = XU7WQ382FC;
+				DEVELOPMENT_TEAM = GM565V9649;
 				INFOPLIST_FILE = CarStoreTests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -889,7 +897,7 @@
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = XU7WQ382FC;
+				DEVELOPMENT_TEAM = GM565V9649;
 				INFOPLIST_FILE = CarStoreUITests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -910,7 +918,7 @@
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = XU7WQ382FC;
+				DEVELOPMENT_TEAM = GM565V9649;
 				INFOPLIST_FILE = CarStoreUITests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",

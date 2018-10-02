@@ -10,12 +10,16 @@ import UIKit
 
 class StoreViewController : UIViewController
 {
+    private let window: UIWindow?
+    
     private var customView: StoreView?
     
     private var presenter: StorePresenterDelegate? = nil
     
-    init(withPresenter presenter: StorePresenter)
+    init(withWindow window: UIWindow?, withPresenter presenter: StorePresenter)
     {
+        self.window = window
+        
         super.init(nibName: nil, bundle: nil)
         
         self.presenter = presenter
@@ -24,6 +28,8 @@ class StoreViewController : UIViewController
     
     required init?(coder aDecoder: NSCoder)
     {
+        self.window = nil
+        
         super.init(coder: aDecoder)
     }
     
@@ -39,6 +45,7 @@ class StoreViewController : UIViewController
     override func viewWillAppear(_ animated: Bool)
     {
         super.viewWillAppear(animated)
+        
     }
     
     override func didReceiveMemoryWarning()
@@ -88,6 +95,11 @@ extension StoreViewController {
 // MARK: - Delegate
 extension StoreViewController : StoreViewDelegate
 {
+    func updateTheme(theme: ColorTheme?)
+    {
+        self.window?.tintColor = theme?.getUIColor()
+    }
+    
     func updateStore(dataSource: StoreViewDataSource?)
     {
         self.customView?.updateStore(dataSource: dataSource)

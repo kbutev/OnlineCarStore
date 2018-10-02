@@ -69,7 +69,6 @@ class BasketProductView : UIView
         imagePicturePreview.trailingAnchor.constraint(equalTo: layoutGuide.trailingAnchor, constant: 0.0).isActive = true
         imagePicturePreview.topAnchor.constraint(equalTo: layoutGuide.topAnchor, constant: 0.0).isActive = true
         imagePicturePreview.bottomAnchor.constraint(equalTo: layoutGuide.bottomAnchor, constant: 0.0).isActive = true
-        imagePicturePreview.backgroundColor = .black
         
         let gesturePicturePreview = UITapGestureRecognizer(target: self, action: #selector(actionTapPreviewImage))
         gesturePicturePreview.numberOfTapsRequired = 1
@@ -89,9 +88,9 @@ extension BasketProductView
         }
         
         DispatchQueue.main.async {
-            if let topSpeed = model.topSpeed
+            if let engine = model.engine
             {
-                self.labelTopSpeed.text = String("Top speed: \(topSpeed)")
+                self.labelTopSpeed.text = String("Engine: \(engine)")
             }
             
             if let price = model.price
@@ -109,12 +108,31 @@ extension BasketProductView
                 DispatchQueue.global(qos: .background).async {
                     do {
                         let data = try Data(contentsOf: url)
-                        let image = UIImage(data: data)
+                        
+                        guard let pngImage = UIImage(data: data) else
+                        {
+                            return
+                        }
+                        
+                        guard let image = self.convertToJPG(image: pngImage) else
+                        {
+                            return
+                        }
                         
                         // Update interface in the main thread
                         DispatchQueue.main.async {
                             self.imagePicture.image = image
                             self.imagePicturePreview.image = image
+                            
+                            // We are going to fill the background if @imagePicturePreview with
+                            // pattern color taken from @image
+                            if let dummyImage = self.resizeImage(image: image, newWidth: 2)
+                            {
+                                if let backgroundColor = self.getPixelColor(image: dummyImage, pos: CGPoint(x: 0, y: 0))
+                                {
+                                    self.imagePicturePreview.backgroundColor = backgroundColor
+                                }
+                            }
                         }
                     }
                     catch
@@ -151,5 +169,56 @@ extension BasketProductView
         let nib = UINib(nibName: nibName, bundle: bundle)
         
         return nib.instantiate(withOwner: owner, options: nil).first as? BasketProductView
+    }
+}
+
+// MARK: - Utilities
+extension BasketProductView
+{
+    func convertToJPG(image: UIImage) -> UIImage?
+    {
+        if let data = image.jpegData(compressionQuality: 1.0)
+        {
+            return UIImage(data: data)
+        }
+        
+        return nil
+    }
+    
+    func resizeImage(image: UIImage, newWidth: CGFloat) -> UIImage?
+    {
+        let scale = newWidth / image.size.width
+        let newHeight = image.size.height * scale
+        
+        UIGraphicsBeginImageContext(CGSize(width: newWidth, height: newHeight))
+        
+        image.draw(in: CGRect(x: 0, y: 0, width: newWidth, height: newHeight), blendMode: .normal, alpha: 1.0)
+        
+        let newImage = UIGraphicsGetImageFromCurrentImageContext()
+        
+        UIGraphicsEndImageContext()
+        
+        return newImage
+    }
+    
+    func getPixelColor(image: UIImage, pos: CGPoint) -> UIColor?
+    {
+        guard let imageData = image.cgImage?.dataProvider?.data else {
+            return nil
+        }
+        
+        guard let pixelData = CGDataProvider(data: imageData)?.data else {
+            return nil
+        }
+        
+        let data: UnsafePointer<UInt8> = CFDataGetBytePtr(pixelData)
+        
+        let pixelInfo: Int = ((Int(image.size.width) * Int(pos.y)) + Int(pos.x)) * 4
+        
+        let r = CGFloat(data[pixelInfo]) / CGFloat(255.0)
+        let g = CGFloat(data[pixelInfo+1]) / CGFloat(255.0)
+        let b = CGFloat(data[pixelInfo+2]) / CGFloat(255.0)
+        
+        return UIColor(red: r, green: g, blue: b, alpha: 1.0)
     }
 }

@@ -73,10 +73,87 @@ class SettingsCurrencyDelegate : NSObject, UIPickerViewDelegate
     }
 }
 
+// This protocol is used for actions. Whenever the picker is modified, the delegate will be alerted
+protocol SettingsThemesViewDelegate : class
+{
+    func didSelectTheme(theme: ColorTheme)
+}
+
+class SettingsThemesDataSource : NSObject, UIPickerViewDataSource
+{
+    private let themes : [ColorTheme]?
+    
+    init(themes : [ColorTheme]?)
+    {
+        self.themes = themes
+    }
+    
+    func numberOfComponents(in pickerView: UIPickerView) -> Int
+    {
+        return 1
+    }
+    
+    func pickerView(_ pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int
+    {
+        if let themes = self.themes
+        {
+            return themes.count
+        }
+        
+        return 0
+    }
+}
+
+class SettingsThemesDelegate : NSObject, UIPickerViewDelegate
+{
+    private let themes : [ColorTheme]?
+    private let actionDelegate: SettingsThemesViewDelegate?
+    
+    init(themes : [ColorTheme]?, actionDelegate: SettingsThemesViewDelegate?)
+    {
+        self.themes = themes
+        self.actionDelegate = actionDelegate
+    }
+    
+    func pickerView(_ pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String?
+    {
+        if let themes = self.themes
+        {
+            return themes[row].rawValue
+        }
+        
+        return nil
+    }
+    
+    func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int)
+    {
+        guard let themes = self.themes else {
+            return
+        }
+        
+        if (0..<themes.count).contains(row)
+        {
+            actionDelegate?.didSelectTheme(theme: themes[row])
+        }
+    }
+    
+    func pickerView(_ pickerView: UIPickerView, attributedTitleForRow row: Int, forComponent component: Int) -> NSAttributedString?
+    {
+        if let themes = self.themes
+        {
+            return NSAttributedString(string: themes[row].rawValue, attributes: [NSAttributedString.Key.foregroundColor: themes[row].getUIColor()])
+        }
+        
+        return nil
+    }
+}
+
 class SettingsView : UIView
 {
     @IBOutlet private weak var labelCurrency: UILabel!
     @IBOutlet private weak var pickerCurrency: UIPickerView!
+    @IBOutlet private weak var labelTheme: UILabel!
+    @IBOutlet private weak var pickerThemes: UIPickerView!
     
     override init(frame: CGRect)
     {
@@ -106,6 +183,16 @@ class SettingsView : UIView
         pickerCurrency.translatesAutoresizingMaskIntoConstraints = false
         pickerCurrency.topAnchor.constraint(equalTo: labelCurrency.bottomAnchor, constant: 10.0).isActive = true
         pickerCurrency.centerXAnchor.constraint(equalTo: layoutGuide.centerXAnchor, constant: 0.0).isActive = true
+        
+        labelTheme.translatesAutoresizingMaskIntoConstraints = false
+        labelTheme.widthAnchor.constraint(equalToConstant: 256.0).isActive = true
+        labelTheme.topAnchor.constraint(equalTo: pickerCurrency.bottomAnchor, constant: 10.0).isActive = true
+        labelTheme.centerXAnchor.constraint(equalTo: layoutGuide.centerXAnchor, constant: 0.0).isActive = true
+        labelTheme.textAlignment = .center
+        
+        pickerThemes.translatesAutoresizingMaskIntoConstraints = false
+        pickerThemes.topAnchor.constraint(equalTo: labelTheme.bottomAnchor, constant: 10.0).isActive = true
+        pickerThemes.centerXAnchor.constraint(equalTo: layoutGuide.centerXAnchor, constant: 0.0).isActive = true
     }
 }
 
@@ -119,12 +206,28 @@ extension SettingsView
         }
     }
     
+    func selectThemePickerValue(row: Int)
+    {
+        DispatchQueue.main.async {
+            self.pickerThemes.selectRow(row, inComponent: 0, animated: false)
+        }
+    }
+    
     func updateCurrencyPicker(dataSource: SettingsCurrencyDataSource?, delegate: SettingsCurrencyDelegate?)
     {
         DispatchQueue.main.async {
             self.pickerCurrency.dataSource = dataSource
             self.pickerCurrency.delegate = delegate
             self.pickerCurrency.reloadAllComponents()
+        }
+    }
+    
+    func updateThemesPicker(dataSource: SettingsThemesDataSource?, delegate: SettingsThemesDelegate?)
+    {
+        DispatchQueue.main.async {
+            self.pickerThemes.dataSource = dataSource
+            self.pickerThemes.delegate = delegate
+            self.pickerThemes.reloadAllComponents()
         }
     }
 }

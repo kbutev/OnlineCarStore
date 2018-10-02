@@ -38,6 +38,7 @@ class BasketPresenter
     {
         self.router = router
         self.basket = basket
+        
         self.viewModel = BasketPresenter.transformToBasketViewModel(basket: basket)
     }
 }

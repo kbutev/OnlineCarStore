@@ -11,7 +11,9 @@ import UIKit
 protocol SettingsViewDelegate: AnyObject
 {
     func updateCurrencyPicker(dataSource: SettingsCurrencyDataSource?, delegate: SettingsCurrencyDelegate?)
+    func updateThemesPicker(dataSource: SettingsThemesDataSource?, delegate: SettingsThemesDelegate?)
     func selectCurrencyPickerValue(row: Int)
+    func selectThemePickerValue(row: Int)
 }
 
 protocol SettingsPresenterDelegate: AnyObject
@@ -19,27 +21,34 @@ protocol SettingsPresenterDelegate: AnyObject
     func update()
     
     func didSelectCurrency(currencyName: CurrencyName)
+    func didSelectTheme(theme: ColorTheme)
     
     func saveAndGoBack()
 }
 
 class SettingsPresenter
 {
+    static let APPLICATION_THEME_KEY_USER_DEFAULTS = "APPLICATION_THEME_KEY_USER_DEFAULTS"
+    
     private var router : RouterProtocol
     
     weak var delegate: SettingsViewDelegate?
     private var currencyDataSource : SettingsCurrencyDataSource?
     private var currencyDelegate : SettingsCurrencyDelegate?
+    private var themesDataSource : SettingsThemesDataSource?
+    private var themesDelegate : SettingsThemesDelegate?
     
     private var defaultCurrency: StoreCurrency
     private var currencies: [StoreCurrency]
+    private var applicationTheme: ColorTheme
     private let viewModel: SettingsViewModel?
     
-    required init(withRouter router: Router = Router.singleton, defaultCurrency: StoreCurrency, currencies: [StoreCurrency])
+    required init(withRouter router: Router = Router.singleton, defaultCurrency: StoreCurrency, currencies: [StoreCurrency], applicationTheme: ColorTheme)
     {
         self.router = router
         self.defaultCurrency = defaultCurrency
         self.currencies = currencies
+        self.applicationTheme = applicationTheme
         self.viewModel = nil
     }
 }
@@ -49,6 +58,7 @@ extension SettingsPresenter : SettingsPresenterDelegate
 {
     func update()
     {
+        // Currency picker and themes picker
         var currencyNames : [CurrencyName] = []
         
         for e in 0..<self.currencies.count
@@ -56,21 +66,38 @@ extension SettingsPresenter : SettingsPresenterDelegate
             currencyNames.append(self.currencies[e].name)
         }
         
+        let themes = ColorThemesConstants.THEMES
+        
         let firstTimeBeingSet = self.currencyDataSource == nil
         
-        self.currencyDataSource = SettingsCurrencyDataSource(currencyNames: currencyNames)
-        self.currencyDelegate = SettingsCurrencyDelegate(currencyNames: currencyNames, actionDelegate: delegate as? SettingsCurrencyViewDelegate)
+        currencyDataSource = SettingsCurrencyDataSource(currencyNames: currencyNames)
+        currencyDelegate = SettingsCurrencyDelegate(currencyNames: currencyNames, actionDelegate: delegate as? SettingsCurrencyViewDelegate)
         
-        delegate?.updateCurrencyPicker(dataSource: self.currencyDataSource, delegate: self.currencyDelegate)
+        themesDataSource = SettingsThemesDataSource(themes: themes)
+        themesDelegate = SettingsThemesDelegate(themes: themes, actionDelegate: delegate as? SettingsThemesViewDelegate)
         
-        // Select the correct picker value - that current application default currency
+        delegate?.updateCurrencyPicker(dataSource: currencyDataSource, delegate: currencyDelegate)
+        delegate?.updateThemesPicker(dataSource: themesDataSource, delegate: themesDelegate)
+        
+        // Select the proper picker value
+        // For currency picker its the current application default currency
+        // For themes picker its the current application theme
         if firstTimeBeingSet
         {
-            for e in 0..<self.currencies.count
+            for e in 0..<currencies.count
             {
-                if self.currencies[e].name == defaultCurrency.name
+                if currencies[e].name == defaultCurrency.name
                 {
                     delegate?.selectCurrencyPickerValue(row: e)
+                    break
+                }
+            }
+            
+            for e in 0..<themes.count
+            {
+                if themes[e] == applicationTheme
+                {
+                    delegate?.selectThemePickerValue(row: e)
                     break
                 }
             }
@@ -94,8 +121,13 @@ extension SettingsPresenter : SettingsPresenterDelegate
         }
     }
     
+    func didSelectTheme(theme: ColorTheme)
+    {
+        self.applicationTheme = theme
+    }
+    
     func saveAndGoBack()
     {
-        router.goBackFromSettings(selectedCurrency: defaultCurrency)
+        router.goBackFromSettings(selectedCurrency: defaultCurrency, applicationTheme: applicationTheme)
     }
 }
