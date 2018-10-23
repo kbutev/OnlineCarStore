@@ -2,6 +2,8 @@ Created: 2018 September
 
 Technologies: Swift 4.2, iOSSnapshotTestCase 4.0.0
 
+Design: MVP (Model=data, View=interface, Presenter=data/interface bridge,state controller)
+
 An example of what an online car store might work like
 
 # Store
