@@ -13,6 +13,8 @@ protocol StoreViewDelegate: AnyObject
     func updateTheme(theme: ColorTheme?)
     func updateStore(dataSource: StoreViewDataSource?)
     func updateBasket(viewModel: BasketViewModel?)
+    
+    func sendErrorMessage(title: String, message: String)
 }
 
 protocol StorePresenterDelegate: AnyObject
@@ -44,6 +46,9 @@ class StorePresenter
     private var applicationTheme: ColorTheme
     
     private let session = URLSession(configuration: URLSessionConfiguration.default)
+    private let failureRetryCount = 5
+    private var failureRetryCountLeft = 0
+    private var failureMessages : [String] = []
     
     required init(withRouter router: Router = Router.singleton, withBasket basket: Basket = Basket(defaultCurrency: CurrencyConstants.DEFAULT_CURRENCY), applicationTheme: ColorTheme = .blue)
     {
@@ -73,11 +78,26 @@ extension StorePresenter : StorePresenterDelegate
 {
     func loadStore()
     {
+        // Reset failure attempts
+        self.failureRetryCountLeft = failureRetryCount
+        self.failureMessages.removeAll()
+        
         // Set the default values fsor the store
         initDefaultStore()
         
-        // Fetch additional data for the cars
-        fetchCarStoreData(handler: {[weak self] (data, error) -> Void in
+        // Fetch data for the cars
+        fetchCarStoreData()
+        
+        // Fetch additional data for the currencies
+        fetchCurrencyData()
+        
+        // Update theme
+        delegate?.updateTheme(theme: applicationTheme)
+    }
+    
+    private func fetchCarStoreData()
+    {
+        let carStoreDataHandler : ([Car]?, NetworkError?) -> Void = {[weak self] (data, error) -> Void in
             if let presenter = self
             {
                 if let cars = data
@@ -102,12 +122,36 @@ extension StorePresenter : StorePresenterDelegate
                     }
                     
                     presenter.delegate?.updateStore(dataSource: self?.dataSource)
+                    
+                    if presenter.failureRetryCountLeft > 0 || presenter.failureRetryCountLeft < 0
+                    {
+                        if presenter.failureRetryCountLeft > 0
+                        {
+                            presenter.failureRetryCountLeft -= 1
+                        }
+                        
+                        presenter.fetchCarStoreData()
+                    }
+                    else
+                    {
+                        let failureMessage = "Could retrieve the car store data! Check your internet connection."
+                        
+                        if !presenter.failureMessages.contains(failureMessage)
+                        {
+                            presenter.failureMessages.append(failureMessage)
+                            presenter.delegate?.sendErrorMessage(title: "Network Error", message: failureMessage)
+                        }
+                    }
                 }
             }
-        })
+        }
         
-        // Fetch additional data for the currencies
-        fetchCurrencyData(handler: {[weak self] (data, error) -> Void in
+        fetchCarStoreData(handler: carStoreDataHandler)
+    }
+    
+    private func fetchCurrencyData()
+    {
+        let currencyDataHandler : ([StoreCurrency]?, NetworkError?) -> Void = {[weak self] (data, error) -> Void in
             if let presenter = self
             {
                 if let currencies = data
@@ -132,12 +176,31 @@ extension StorePresenter : StorePresenterDelegate
                     }
                     
                     presenter.delegate?.updateStore(dataSource: self?.dataSource)
+                    
+                    if presenter.failureRetryCountLeft > 0 || presenter.failureRetryCountLeft < 0
+                    {
+                        if presenter.failureRetryCountLeft > 0
+                        {
+                            presenter.failureRetryCountLeft -= 1
+                        }
+                        
+                        presenter.fetchCurrencyData()
+                    }
+                    else
+                    {
+                        let failureMessage = "Could retrieve the currency data! Check your internet connection."
+                        
+                        if !presenter.failureMessages.contains(failureMessage)
+                        {
+                            presenter.failureMessages.append(failureMessage)
+                            presenter.delegate?.sendErrorMessage(title: "Network Error", message: failureMessage)
+                        }
+                    }
                 }
             }
-        })
+        }
         
-        // Update theme
-        delegate?.updateTheme(theme: applicationTheme)
+        fetchCurrencyData(handler: currencyDataHandler)
     }
     
     func clearBasketCars()

@@ -42,7 +42,7 @@ class SettingsCurrencyDataSource : NSObject, UIPickerViewDataSource
 class SettingsCurrencyDelegate : NSObject, UIPickerViewDelegate
 {
     private let currencyNames : [CurrencyName]?
-    private let actionDelegate: SettingsCurrencyViewDelegate?
+    private weak var actionDelegate: SettingsCurrencyViewDelegate?
     
     init(currencyNames : [CurrencyName]?, actionDelegate: SettingsCurrencyViewDelegate?)
     {
@@ -107,7 +107,7 @@ class SettingsThemesDataSource : NSObject, UIPickerViewDataSource
 class SettingsThemesDelegate : NSObject, UIPickerViewDelegate
 {
     private let themes : [ColorTheme]?
-    private let actionDelegate: SettingsThemesViewDelegate?
+    private weak var actionDelegate: SettingsThemesViewDelegate?
     
     init(themes : [ColorTheme]?, actionDelegate: SettingsThemesViewDelegate?)
     {

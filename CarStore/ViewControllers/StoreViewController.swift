@@ -109,4 +109,18 @@ extension StoreViewController : StoreViewDelegate
     {
         self.customView?.updateBasket(viewModel: viewModel)
     }
+    
+    func sendErrorMessage(title: String, message: String)
+    {
+        if navigationController?.topViewController == self
+        {
+            let alert = UIAlertController(title: title, message: message, preferredStyle: UIAlertController.Style.alert)
+            alert.addAction(UIAlertAction(title: "Ok", style: UIAlertAction.Style.default, handler: nil))
+            self.present(alert, animated: true, completion: nil)
+        }
+        
+        DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + 10, execute: {
+            self.presenter?.loadStore()
+        })
+    }
 }
